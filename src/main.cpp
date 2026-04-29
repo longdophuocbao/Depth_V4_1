@@ -271,8 +271,12 @@ volatile float g_lifting_filtered = 40.0f;
 volatile float g_tail_filtered = 0.0f;
 volatile float g_depth_target = 100.0f;
 volatile float g_setpoint = 20.0f;
-volatile bool g_is_auto = false;
+volatile int   g_mode = 1; // 0: Auto, 1: Manual, 2: Step, 3: Oscillation
 volatile float g_alpha_manual = 20.0f;
+volatile float g_sp_amp = 10.0f;
+volatile float g_sp_freq = 0.1f;
+volatile float g_sp_raw = 20.0f; // Raw target before ref filter
+
 volatile float g_e = 0.0f;
 volatile float g_de = 0.0f;
 volatile float g_s = 0.0f;
@@ -290,14 +294,13 @@ volatile float g_ddot_alpha_ref = 0.0f;
 // ────────────────────────────────────────────────────────────────────
 //  THAM SỐ ĐIỀU KHIỂN
 // ────────────────────────────────────────────────────────────────────
-volatile float g_Kp = 1.8f;//0.74f; // 1.4 //1.81
-volatile float g_Ki = 1.5f;//0.4f; // 0.5 //1.5
-volatile float g_Kd = 1.33;//0.86f; // 0.57/0.69
-volatile float g_K1 = 3.7f;//1.2f; // 0.47Gain của Super-Twisting SMC (√|s|·sign(s)) //1.24
-volatile float g_K2 = 0.5f;//0.4f; // 0.89Gain của Super-Twisting SMC (∫sign(s)) //0,5
+volatile float g_Kp = 1.8f;
+volatile float g_Ki = 1.5f;
+volatile float g_Kd = 1.33f;
+volatile float g_K1 = 3.7f;
+volatile float g_K2 = 0.5f;
 
-volatile float g_K = 35.0f;//0.076976f * 100.0f; //35
-// volatile float g_K = 0.146976f * 100.0f;
+volatile float g_K = 35.0f;
 volatile float g_tau1 = 1.2244f;
 volatile float g_L = 0.0331f;
 volatile float g_lift_offset = 266.6f;
@@ -427,8 +430,9 @@ void runController()
 {
     float liftingangle = g_lifting_filtered;
     float tailangle = g_tail_filtered;
-    float depth_target, Kp, Ki, Kd, K1, K2, K, tau1, L, alpha_manual;
-    bool is_auto, dirty = false;
+    float depth_target, Kp, Ki, Kd, K1, K2, K, tau1, L, alpha_manual, sp_amp, sp_freq;
+    int mode;
+    bool dirty = false;
 
     if (xSemaphoreTake(g_mutex, pdMS_TO_TICKS(5)) == pdTRUE)
     {
@@ -441,8 +445,10 @@ void runController()
         K = g_K;
         tau1 = g_tau1;
         L = g_L;
-        is_auto = g_is_auto;
+        mode = g_mode;
         alpha_manual = g_alpha_manual;
+        sp_amp = g_sp_amp;
+        sp_freq = g_sp_freq;
         dirty = g_model_dirty;
         g_model_dirty = false;
         xSemaphoreGive(g_mutex);
@@ -450,32 +456,40 @@ void runController()
     else
         return;
 
-    // float sp_raw = is_auto ? (float)calculate_alpha(depth_target, tailangle) : alpha_manual;
-    float sp_raw = is_auto ? (float)get_alpha_ref(liftingangle, tailangle, depth_target) : alpha_manual;
+    // --- MODE HANDLING ---
+    float sp_raw = 20.0f;
+    if (mode == 0) { // Auto
+        sp_raw = (float)get_alpha_ref(liftingangle, tailangle, depth_target);
+    } else if (mode == 1) { // Manual
+        sp_raw = alpha_manual;
+    } else if (mode == 2) { // Step Wave
+        float period = 1.0f / (sp_freq > 0.001f ? sp_freq : 0.001f);
+        float time_in_period = fmodf(millis() / 1000.0f, period);
+        sp_raw = alpha_manual + (time_in_period < period / 2.0f ? sp_amp : -sp_amp);
+    } else if (mode == 3) { // Oscillation
+        sp_raw = alpha_manual + sp_amp * sinf(2.0f * M_PI * sp_freq * (millis() / 1000.0f));
+    }
+    sp_raw = constrain(sp_raw, 0.0f, 40.0f);
     g_sp_raw_val = sp_raw;
 
     // ── STATICS – khai báo tập trung để dễ quản lý ──────────────────
     static float u_sw_int = 0.0f;
     static float u_prev   = 0.0f;
     static float y_pred_prev = 0.0f;
-    static bool  prev_is_auto = false;
+    static int   prev_mode   = -1;
     static bool  first_run    = true;
 
     // ── KHỞI TẠO / ĐỔI CHẾ ĐỘ ─────────────────────────────────────
-    // Chỉ reset khi lần đầu chạy hoặc khi chuyển manual↔auto.
-    // Việc reset đặt x1 về vị trí THỰC của tay đòn (không phải target),
-    // để filter ramp mượt từ vị trí hiện tại → setpoint mới.
-    bool mode_changed = (is_auto != prev_is_auto);
-    if (first_run || mode_changed)
+    if (first_run || mode != prev_mode)
     {
-        refFilter.x1      = liftingangle; // bắt đầu từ vị trí thực, không snap về target
+        refFilter.x1      = liftingangle;
         refFilter.x2      = 0.0f;
         g_e_int           = 0.0f;
         u_sw_int          = 0.0f;
         y_pred_prev       = liftingangle;
         first_run         = false;
     }
-    prev_is_auto = is_auto;
+    prev_mode = mode;
 
     // ── REFERENCE FILTER – để ramp tự nhiên, KHÔNG snap ─────────────
     // ReferenceFilter bậc 2 (ω, ζ=1) sẽ tự tạo quỹ đạo mượt:
@@ -718,7 +732,7 @@ void broadcastData()
     status.de = g_de;
     status.s = g_s;
     status.u = g_u;
-    status.is_auto = g_is_auto ? 1.0f : 0.0f;
+    status.is_auto = (g_mode == 0) ? 1.0f : 0.0f;
     xSemaphoreGive(g_mutex);
 
     ws.binaryAll((uint8_t *)&status, sizeof(ControllerStatus));
@@ -755,7 +769,7 @@ void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventTyp
                     g_K2 = constrain(p->K2, 0.01f, 500.0f);
                     g_lift_offset = constrain(p->lift_offset, 0.0f, 345.0f);
                     g_tail_offset = constrain(p->tail_offset, 0.0f, 250.f);
-                    g_is_auto = (p->is_auto > 0.5f);
+                    g_mode = (p->is_auto > 0.5f) ? 0 : 1;
                     g_alpha_manual = constrain(p->alpha_manual, 0.0f, 40.0f);
 
                     if (p->K != g_K || p->tau1 != g_tau1 || p->L != g_L)
@@ -806,14 +820,14 @@ void setupRoutes()
 struct __attribute__((packed)) SerialTelemetry
 {
     uint16_t header = 0xAA55;
-    float values[35]; // time_s, y_pred, est_depth, is_auto, lift_raw, lift_filt, tail_raw, tail_filt, dot_alpha_raw, dtar, sp_ref, dot_ref, ddot_ref, alpha_man, omega_ref, e, de, s, u, u_eq, u_sw, u_sw_i, Kp, Ki, Kd, K1, K2, K, t1, L, fc_L, fc_T, L_off, T_off, e_int
+    float values[35]; 
     uint8_t checksum;
 };
 
 struct __attribute__((packed)) SerialCommand
 {
     uint16_t header;
-    float values[12]; // Kp, Ki, Kd, K1, K2, K, t1, L, fc_L, fc_T, fc_de, fc_ref
+    float values[17]; 
     uint8_t checksum;
 };
 
@@ -830,14 +844,14 @@ void serialTuningTask(void *param)
             v[0] = millis() / 1000.0f;
             v[1] = g_y_pred;
             v[2] = g_estimate_depth;
-            v[3] = g_is_auto ? 1.0f : 0.0f;
+            v[3] = (float)g_mode;
             v[4] = g_lifting_raw_val;
             v[5] = g_liftingangle;
             v[6] = g_tail_raw_val;
             v[7] = g_tailboardangle;
             v[8] = g_dot_alpha_actual_raw;
             v[9] = g_depth_target;
-            v[10] = g_setpoint;
+            v[10] = g_sp_raw_val;
             v[11] = g_dot_alpha_ref;
             v[12] = g_ddot_alpha_ref;
             v[13] = g_alpha_manual;
@@ -879,21 +893,28 @@ void serialTuningTask(void *param)
                     if (xSemaphoreTake(g_mutex, pdMS_TO_TICKS(10)) == pdTRUE)
                     {
                         float *cv = cmd->values;
-                        g_Kp = cv[0];
-                        g_Ki = cv[1];
-                        g_Kd = cv[2];
-                        g_K1 = cv[3];
-                        g_K2 = cv[4];
-                        g_K = cv[5];
-                        g_tau1 = cv[6];
-                        g_L = cv[7];
+                        g_mode = (int)cv[0];
+                        g_depth_target = cv[1];
+                        g_alpha_manual = cv[2];
+                        g_sp_amp = cv[3];
+                        g_sp_freq = cv[4];
+
+                        g_Kp = cv[5];
+                        g_Ki = cv[6];
+                        g_Kd = cv[7];
+                        g_K1 = cv[8];
+                        g_K2 = cv[9];
                         
-                        if (g_fc_lifting != cv[8] || g_fc_tailboard != cv[9] || g_fc_de != cv[10] || g_omega_ref != cv[11])
+                        g_K = cv[10];
+                        g_tau1 = cv[11];
+                        g_L = cv[12] / 1000.0f; // HTML sends L in ms
+                        
+                        if (g_fc_lifting != cv[13] || g_fc_tailboard != cv[14] || g_fc_de != cv[15] || g_omega_ref != cv[16])
                         {
-                            g_fc_lifting = cv[8];
-                            g_fc_tailboard = cv[9];
-                            g_fc_de = cv[10];
-                            g_omega_ref = cv[11];
+                            g_fc_lifting = cv[13];
+                            g_fc_tailboard = cv[14];
+                            g_fc_de = cv[15];
+                            g_omega_ref = cv[16];
                             
                             filterLifting.init(g_fc_lifting, 500.0f);
                             filterTailboard.init(g_fc_tailboard, 500.0f);
