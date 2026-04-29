@@ -272,6 +272,7 @@ volatile float g_tail_filtered = 0.0f;
 volatile float g_depth_target = 100.0f;
 volatile float g_setpoint = 20.0f;
 volatile int   g_mode = 1; // 0: Auto, 1: Manual, 2: Step, 3: Oscillation
+volatile bool  g_run_state = false;
 volatile float g_alpha_manual = 20.0f;
 volatile float g_sp_amp = 10.0f;
 volatile float g_sp_freq = 0.1f;
@@ -432,7 +433,7 @@ void runController()
     float tailangle = g_tail_filtered;
     float depth_target, Kp, Ki, Kd, K1, K2, K, tau1, L, alpha_manual, sp_amp, sp_freq;
     int mode;
-    bool dirty = false;
+    bool run_state, dirty = false;
 
     if (xSemaphoreTake(g_mutex, pdMS_TO_TICKS(5)) == pdTRUE)
     {
@@ -446,6 +447,7 @@ void runController()
         tau1 = g_tau1;
         L = g_L;
         mode = g_mode;
+        run_state = g_run_state;
         alpha_manual = g_alpha_manual;
         sp_amp = g_sp_amp;
         sp_freq = g_sp_freq;
@@ -604,8 +606,13 @@ void runController()
     u_sw = constrain(u_sw, -PWM_MAX_ABS, PWM_MAX_ABS);
 
     float u_out = constrain(u_eq + u_sw, -PWM_MAX_ABS, PWM_MAX_ABS);
-    driveActuator(u_out);
-    u_prev = u_out;
+    if (run_state) {
+        driveActuator(u_out);
+        u_prev = u_out;
+    } else {
+        driveActuator(0.0f);
+        u_prev = 0.0f;
+    }
     float estimatedepth = (float)calculate_estimate_depth(liftingangle, tailangle);
     if (xSemaphoreTake(g_mutex, pdMS_TO_TICKS(5)) == pdTRUE)
     {
@@ -827,7 +834,7 @@ struct __attribute__((packed)) SerialTelemetry
 struct __attribute__((packed)) SerialCommand
 {
     uint16_t header;
-    float values[17]; 
+    float values[18]; 
     uint8_t checksum;
 };
 
@@ -893,28 +900,29 @@ void serialTuningTask(void *param)
                     if (xSemaphoreTake(g_mutex, pdMS_TO_TICKS(10)) == pdTRUE)
                     {
                         float *cv = cmd->values;
-                        g_mode = (int)cv[0];
-                        g_depth_target = cv[1];
-                        g_alpha_manual = cv[2];
-                        g_sp_amp = cv[3];
-                        g_sp_freq = cv[4];
+                        g_run_state = (cv[0] > 0.5f);
+                        g_mode = (int)cv[1];
+                        g_depth_target = cv[2];
+                        g_alpha_manual = cv[3];
+                        g_sp_amp = cv[4];
+                        g_sp_freq = cv[5];
 
-                        g_Kp = cv[5];
-                        g_Ki = cv[6];
-                        g_Kd = cv[7];
-                        g_K1 = cv[8];
-                        g_K2 = cv[9];
+                        g_Kp = cv[6];
+                        g_Ki = cv[7];
+                        g_Kd = cv[8];
+                        g_K1 = cv[9];
+                        g_K2 = cv[10];
                         
-                        g_K = cv[10];
-                        g_tau1 = cv[11];
-                        g_L = cv[12] / 1000.0f; // HTML sends L in ms
+                        g_K = cv[11];
+                        g_tau1 = cv[12];
+                        g_L = cv[13] / 1000.0f; // HTML sends L in ms
                         
-                        if (g_fc_lifting != cv[13] || g_fc_tailboard != cv[14] || g_fc_de != cv[15] || g_omega_ref != cv[16])
+                        if (g_fc_lifting != cv[14] || g_fc_tailboard != cv[15] || g_fc_de != cv[16] || g_omega_ref != cv[17])
                         {
-                            g_fc_lifting = cv[13];
-                            g_fc_tailboard = cv[14];
-                            g_fc_de = cv[15];
-                            g_omega_ref = cv[16];
+                            g_fc_lifting = cv[14];
+                            g_fc_tailboard = cv[15];
+                            g_fc_de = cv[16];
+                            g_omega_ref = cv[17];
                             
                             filterLifting.init(g_fc_lifting, 500.0f);
                             filterTailboard.init(g_fc_tailboard, 500.0f);
