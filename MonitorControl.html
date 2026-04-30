@@ -1095,10 +1095,10 @@
 
                         // Tìm và xử lý gói tin trong Buffer
                         while (receiveBuffer.length >= RX_PACKET_SIZE) {
-                            // 1. Tìm Header 0x55 0xAA (Little Endian của 0xAA55)
+                            // 1. Tìm Header 0xAA 0x55
                             let syncIndex = -1;
                             for (let i = 0; i < receiveBuffer.length - 1; i++) {
-                                if (receiveBuffer[i] === 0x55 && receiveBuffer[i + 1] === 0xAA) {
+                                if (receiveBuffer[i] === 0xAA && receiveBuffer[i + 1] === 0x55) {
                                     syncIndex = i;
                                     break;
                                 }
@@ -1167,6 +1167,7 @@
         }
 
         // Xử lý dữ liệu đã parse
+        let updateCounter = 0;
         function processParsedData(data) {
             // Lấy thời gian thực (Real-time) từ hệ thống máy tính theo định dạng HH:mm:ss:SSS
             const now = new Date();
@@ -1177,31 +1178,25 @@
 
             // CHUẨN HOÁ DỮ LIỆU ĐỂ LƯU CSV
             const csvRow = {
-                // 1. Thời gian & Trạng thái hệ thống
+                // ... (giữ nguyên các trường dữ liệu)
                 "real_time": realTimeStr,
                 "time_s": data.time_s ?? 0,
                 "y_pred": data.y_pred ?? 0,
                 "est_depth": data.est_depth ?? 0,
                 "mode": data.mode ?? 0,
-
-                // 2. Dữ liệu Cảm biến
                 "lift_raw": data.lift_raw ?? 0,
                 "lift_filt": data.lift_filt ?? 0,
                 "tail_raw": data.tail_raw ?? 0,
                 "tail_filt": data.tail_filt ?? 0,
                 "dot_alpha_raw": data.dot_alpha_raw ?? 0,
-
-                // 3. Mục tiêu & Tham chiếu
                 "depth_target": data.depth_target ?? 0,
                 "sp_ref": data.sp_ref ?? 0,
-                "sp_amp": document.getElementById('p_sp_amp').value ?? 0, // Ghi log thêm Amp/Freq từ UI
+                "sp_amp": document.getElementById('p_sp_amp').value ?? 0,
                 "sp_freq": document.getElementById('p_sp_freq').value ?? 0,
                 "dot_alpha_ref": data.dot_alpha_ref ?? 0,
                 "ddot_alpha_ref": data.ddot_alpha_ref ?? 0,
                 "alpha_manual": data.alpha_manual ?? 0,
                 "omega_ref": data.omega_ref ?? 0,
-
-                // 4. Thành phần Điều khiển SMC
                 "e": data.e ?? 0,
                 "de": data.de ?? 0,
                 "s": data.s ?? 0,
@@ -1209,15 +1204,11 @@
                 "u_eq": data.u_eq ?? 0,
                 "u_sw": data.u_sw ?? 0,
                 "u_sw_i": data.u_sw_i ?? 0,
-
-                // 5. Hệ số Điều khiển
                 "Kp": data.Kp ?? 0,
                 "Ki": data.Ki ?? 0,
                 "Kd": data.Kd ?? 0,
                 "K1": data.K1 ?? 0,
                 "K2": data.K2 ?? 0,
-
-                // 6. Tham số mô hình & Cấu hình
                 "K": data.K ?? 0,
                 "tau1": data.tau1 ?? 0,
                 "L": data.L ?? 0,
@@ -1225,8 +1216,6 @@
                 "fc_tail": data.fc_tail ?? 0,
                 "lift_offset": data.lift_offset ?? 0,
                 "tail_offset": data.tail_offset ?? 0,
-
-                // Phục vụ vẽ Chart
                 "e_int": data.e_int ?? 0
             };
 
@@ -1236,134 +1225,91 @@
                 document.getElementById('lblDataCount').innerText = recordedData.length;
             }
 
-            // Tên nhãn cho trục X của Chart (Hiển thị thời gian thực HH:mm:ss:SSS)
+            // Tên nhãn cho trục X của Chart
             const t_label = realTimeStr;
             const mcuTime = (data.time_s ?? 0);
 
-            // --- TÍNH TOÁN THỜI GIAN ĐÁP ỨNG (RESPONSE / SETTLING TIME) ---
+            // --- TÍNH TOÁN THỜI GIAN ĐÁP ỨNG ---
             const sp = csvRow.sp_ref;
             const y = csvRow.est_depth;
-
-            // Khởi tạo lần đầu
-            if (responseTimeObj.lastSp === null) {
-                responseTimeObj.lastSp = sp;
-            }
-
-            // Phát hiện có sự thay đổi mục tiêu (Step) - Chênh lệch > 0.5
+            if (responseTimeObj.lastSp === null) responseTimeObj.lastSp = sp;
             if (Math.abs(sp - responseTimeObj.lastSp) > 0.5) {
                 responseTimeObj.startTime = mcuTime;
                 responseTimeObj.isMeasuring = true;
                 responseTimeObj.lastSp = sp;
             }
-
-            // Mức dung sai (Tolerance) = 2% của Setpoint (hoặc tối thiểu là 0.5 nếu SP nhỏ)
             const tolerance = Math.max(0.5, Math.abs(sp) * 0.02);
             const currentError = Math.abs(sp - y);
-
             if (responseTimeObj.isMeasuring) {
-                if (currentError <= tolerance) {
-                    // Đã lọt vào vùng dung sai -> Dừng đo và chốt kết quả
-                    responseTimeObj.settledTime = mcuTime - responseTimeObj.startTime;
-                    responseTimeObj.isMeasuring = false;
-                } else {
-                    // Vẫn đang hội tụ -> Cập nhật thời gian trôi qua liên tục
-                    responseTimeObj.settledTime = mcuTime - responseTimeObj.startTime;
-                }
-            } else {
-                // Nếu đột nhiên bị nhiễu văng ra khỏi dải dung sai > mức an toàn (x2)
-                if (currentError > tolerance * 2) {
-                    responseTimeObj.startTime = mcuTime;
-                    responseTimeObj.isMeasuring = true;
-                }
+                responseTimeObj.settledTime = mcuTime - responseTimeObj.startTime;
+                if (currentError <= tolerance) responseTimeObj.isMeasuring = false;
+            } else if (currentError > tolerance * 2) {
+                responseTimeObj.startTime = mcuTime;
+                responseTimeObj.isMeasuring = true;
             }
 
-            // --- Cập nhật Thẻ thông số tóm tắt (Summary Cards) ---
+            // --- Cập nhật Thẻ thông số tóm tắt ---
             document.getElementById('val-setpoint').innerText = (csvRow.sp_ref).toFixed(1);
             document.getElementById('val-current').innerText = (csvRow.est_depth).toFixed(1);
             document.getElementById('val-error').innerText = (csvRow.e).toFixed(2);
-
             const valTimeEl = document.getElementById('val-time');
-            if (responseTimeObj.isMeasuring) {
-                valTimeEl.innerText = responseTimeObj.settledTime.toFixed(2) + ' s...';
-                valTimeEl.className = "text-xl sm:text-2xl font-bold text-amber-500 font-mono truncate w-full text-center";
-            } else {
-                valTimeEl.innerText = responseTimeObj.settledTime.toFixed(2) + ' s';
-                valTimeEl.className = "text-xl sm:text-2xl font-bold text-green-500 font-mono truncate w-full text-center";
-            }
+            valTimeEl.innerText = responseTimeObj.settledTime.toFixed(2) + (responseTimeObj.isMeasuring ? ' s...' : ' s');
+            valTimeEl.className = responseTimeObj.isMeasuring ? "text-xl sm:text-2xl font-bold text-amber-500 font-mono truncate w-full text-center" : "text-xl sm:text-2xl font-bold text-green-500 font-mono truncate w-full text-center";
 
-            // --- Cập nhật Biểu đồ 1-5 ---
+            // --- Cập nhật Dữ liệu Biểu đồ (Chưa Render) ---
             pushChartData(chartResponse, t_label, [csvRow.sp_ref, csvRow.est_depth, csvRow.y_pred]);
             pushChartData(chartControl, t_label, [csvRow.u]);
             pushChartData(chartUeq, t_label, [csvRow.u_eq]);
             pushChartData(chartUsw, t_label, [csvRow.u_sw]);
             pushChartData(chartSliding, t_label, [csvRow.s]);
-
-            // --- Biểu đồ 6: Tính toán Thành phần mặt trượt ---
-            const p_comp = csvRow.Kp * csvRow.e;
-            const i_comp = csvRow.Ki * csvRow.e_int;
-            const d_comp = csvRow.Kd * csvRow.de;
+            
+            const p_comp = csvRow.Kp * csvRow.e, i_comp = csvRow.Ki * csvRow.e_int, d_comp = csvRow.Kd * csvRow.de;
             pushChartData(chartSComp, t_label, [p_comp, i_comp, d_comp]);
+            updateComponentCard('s-p', p_comp); updateComponentCard('s-i', i_comp); updateComponentCard('s-d', d_comp);
 
-            updateComponentCard('s-p', p_comp);
-            updateComponentCard('s-i', i_comp);
-            updateComponentCard('s-d', d_comp);
-
-            // --- Chuẩn bị biến chung cho đồ thị 7 và 8 ---
             const safe_tau1 = Math.abs(csvRow.tau1) < 1e-4 ? 1e-4 : csvRow.tau1;
-            const a1 = 1.0 / safe_tau1;
-            const a2 = 0.0;
-            const b = (-csvRow.K) / safe_tau1;
+            const a1 = 1.0 / safe_tau1, b = (-csvRow.K) / safe_tau1;
             const safe_Kd = Math.abs(csvRow.Kd) < 1e-4 ? (csvRow.Kd >= 0 ? 1e-4 : -1e-4) : csvRow.Kd;
-            const b_Kd = b * safe_Kd;
-
-            // --- Biểu đồ 7: Tính toán các thành phần của u_eq ---
+            
             let c_alpha = 0, c_ypred = 0, c_ref = 0, c_de = 0, c_e = 0;
             if (Math.abs(b) > 1e-6) {
                 const inv_b = 1.0 / b;
                 c_alpha = inv_b * a1 * csvRow.dot_alpha_raw;
-                c_ypred = inv_b * a2 * csvRow.y_pred;
                 c_ref = inv_b * csvRow.ddot_alpha_ref;
                 c_de = inv_b * -(csvRow.Kp / safe_Kd) * csvRow.de;
                 c_e = inv_b * -(csvRow.Ki / safe_Kd) * csvRow.e;
             }
             pushChartData(chartUeqComp, t_label, [c_alpha, c_ypred, c_ref, c_de, c_e]);
+            updateComponentCard('ueq-1', c_alpha); updateComponentCard('ueq-2', c_ypred); updateComponentCard('ueq-3', c_ref); updateComponentCard('ueq-4', c_de); updateComponentCard('ueq-5', c_e);
 
-            updateComponentCard('ueq-1', c_alpha);
-            updateComponentCard('ueq-2', c_ypred);
-            updateComponentCard('ueq-3', c_ref);
-            updateComponentCard('ueq-4', c_de);
-            updateComponentCard('ueq-5', c_e);
-
-            // --- Biểu đồ 8: Tính toán các thành phần của u_sw ---
             let c_usw_prop = 0, c_usw_int = 0;
-            if (Math.abs(b_Kd) > 1e-6) {
-                const inv_b_Kd = 1.0 / b_Kd;
-                const s_val = csvRow.s;
-                const sign_s = s_val > 0 ? 1 : (s_val < 0 ? -1 : 0);
-
-                c_usw_prop = inv_b_Kd * (-csvRow.K1 * Math.sqrt(Math.abs(s_val)) * sign_s);
+            if (Math.abs(b * safe_Kd) > 1e-6) {
+                const inv_b_Kd = 1.0 / (b * safe_Kd);
+                c_usw_prop = inv_b_Kd * (-csvRow.K1 * Math.sqrt(Math.abs(csvRow.s)) * (csvRow.s > 0 ? 1 : (csvRow.s < 0 ? -1 : 0)));
                 c_usw_int = inv_b_Kd * csvRow.u_sw_i;
             }
             pushChartData(chartUswComp, t_label, [c_usw_prop, c_usw_int]);
+            updateComponentCard('usw-1', c_usw_prop); updateComponentCard('usw-2', c_usw_int);
 
-            updateComponentCard('usw-1', c_usw_prop);
-            updateComponentCard('usw-2', c_usw_int);
-
-            // --- Biểu đồ 9 & 10: Lifting và Tailboard ---
             pushChartData(chartLifting, t_label, [csvRow.lift_raw, csvRow.lift_filt]);
             pushChartData(chartTailboard, t_label, [csvRow.tail_raw, csvRow.tail_filt]);
 
-            // Update tất cả các chart
-            chartResponse.update();
-            chartControl.update();
-            chartUeq.update();
-            chartUsw.update();
-            chartSliding.update();
-            chartSComp.update();
-            chartUeqComp.update();
-            chartUswComp.update();
-            chartLifting.update();
-            chartTailboard.update();
+            // --- GIỚI HẠN TỐC ĐỘ VẼ (THROTTLING) ---
+            // Chỉ render lại biểu đồ sau mỗi 10 gói tin để tránh lag trình duyệt
+            updateCounter++;
+            if (updateCounter >= 10) {
+                chartResponse.update('none');
+                chartControl.update('none');
+                chartUeq.update('none');
+                chartUsw.update('none');
+                chartSliding.update('none');
+                chartSComp.update('none');
+                chartUeqComp.update('none');
+                chartUswComp.update('none');
+                chartLifting.update('none');
+                chartTailboard.update('none');
+                updateCounter = 0;
+            }
         }
 
         // === LOGIC GỬI THAM SỐ XUỐNG BOARD BẰNG PROTOCOL NHỊ PHÂN ===
@@ -1403,8 +1349,8 @@
             const txUint8 = new Uint8Array(txBuffer);
 
             // 1. Header
-            txUint8[0] = 0x55;
-            txUint8[1] = 0xAA;
+            txUint8[0] = 0xAA;
+            txUint8[1] = 0x55;
 
             // 2. Payload (Chép tuần tự 18 tham số float dạng Little Endian)
             let offset = 2;

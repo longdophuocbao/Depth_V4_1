@@ -311,6 +311,8 @@ volatile float g_fc_lifting = 10.0f, g_fc_tailboard = 10.0f, g_omega_ref = 2.0f,
 
 volatile bool g_model_dirty = true;
 
+volatile float g_lifting_raw_val = 0, g_tail_raw_val = 0, g_sp_raw_val = 0;
+
 // ────────────────────────────────────────────────────────────────────
 //  ĐỐI TƯỢNG TOÀN CỤC
 // ────────────────────────────────────────────────────────────────────
@@ -324,7 +326,7 @@ AsyncWebSocket ws("/ws");
 DNSServer dnsServer;
 #endif
 
-float g_lifting_raw_val = 0, g_tail_raw_val = 0, g_sp_raw_val = 0;
+
 
 uint8_t calculateChecksum(uint8_t *data, size_t len)
 {
@@ -680,7 +682,7 @@ void controlTask(void *param)
         if (now - last_report_ms >= 1000)
         {
             float freq = (float)count * 1000.0f / (float)(now - last_report_ms);
-            Serial.printf("[DEBUG] controlTask Frequency: %.2f Hz\n", freq);
+            // Serial.printf("[DEBUG] controlTask Frequency: %.2f Hz\n", freq);
             count = 0;
             last_report_ms = now;
         }
@@ -826,8 +828,8 @@ void setupRoutes()
 // ────────────────────────────────────────────────────────────────────
 struct __attribute__((packed)) SerialTelemetry
 {
-    uint8_t head1 = 0x55;
-    uint8_t head2 = 0xAA;
+    uint8_t head1 = 0xAA;
+    uint8_t head2 = 0x55;
     float values[35]; 
     uint8_t checksum;
 };
@@ -893,11 +895,11 @@ void serialTuningTask(void *param)
         if (Serial.available() >= sizeof(SerialCommand))
         {
             uint8_t buf[sizeof(SerialCommand)];
-            if (Serial.peek() == 0x55)
+            if (Serial.peek() == 0xAA)
             {
                 Serial.readBytes(buf, sizeof(SerialCommand));
                 SerialCommand *cmd = (SerialCommand *)buf;
-                if (cmd->head1 == 0x55 && cmd->head2 == 0xAA && calculateChecksum((uint8_t *)&cmd->values, sizeof(cmd->values)) == cmd->checksum)
+                if (cmd->head1 == 0xAA && cmd->head2 == 0x55 && calculateChecksum((uint8_t *)&cmd->values, sizeof(cmd->values)) == cmd->checksum)
                 {
                     if (xSemaphoreTake(g_mutex, pdMS_TO_TICKS(10)) == pdTRUE)
                     {
@@ -949,7 +951,7 @@ void setup()
 {
     setCpuFrequencyMhz(240);
     delay(500);
-    Serial.begin(115200);
+    Serial.begin(250000);
     delay(500);
     Serial.println("\n=== Tractor SOIPDT + Super-Twisting SMC ===");
     Wire.begin(PIN_SDA, PIN_SCL);
