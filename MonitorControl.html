@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,68 +20,111 @@
         ::-webkit-scrollbar {
             width: 8px;
         }
+
         ::-webkit-scrollbar-track {
-            background: #f1f1f1; 
+            background: #f1f1f1;
         }
+
         ::-webkit-scrollbar-thumb {
-            background: #cbd5e1; 
+            background: #cbd5e1;
             border-radius: 4px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8; 
+            background: #94a3b8;
         }
-        
+
         /* Dark mode scrollbar */
         html.dark ::-webkit-scrollbar-track {
-            background: #1e293b; 
+            background: #1e293b;
         }
+
         html.dark ::-webkit-scrollbar-thumb {
-            background: #475569; 
+            background: #475569;
         }
+
         html.dark ::-webkit-scrollbar-thumb:hover {
-            background: #64748b; 
+            background: #64748b;
         }
     </style>
 </head>
-<body class="bg-slate-100 dark:bg-slate-900 h-screen flex overflow-hidden font-sans text-slate-800 dark:text-slate-200 transition-colors duration-300">
+
+<body
+    class="bg-slate-100 dark:bg-slate-900 h-screen flex overflow-hidden font-sans text-slate-800 dark:text-slate-200 transition-colors duration-300">
 
     <!-- CỘT BÊN TRÁI: ĐIỀU KHIỂN & THAM SỐ -->
-    <div class="w-80 bg-white dark:bg-slate-800 shadow-xl flex flex-col h-full z-10 transition-colors duration-300 border-r border-slate-200 dark:border-slate-700/50 flex-shrink-0">
+    <div
+        class="w-80 bg-white dark:bg-slate-800 shadow-xl flex flex-col h-full z-10 transition-colors duration-300 border-r border-slate-200 dark:border-slate-700/50 flex-shrink-0">
         <div class="p-5 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
             <div>
-                <h1 class="text-xl font-bold text-blue-700 dark:text-blue-400 uppercase tracking-wide">Monitor Control</h1>
+                <h1 class="text-xl font-bold text-blue-700 dark:text-blue-400 uppercase tracking-wide">Monitor Control
+                </h1>
                 <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">SMC + STA + Smith Predictor</p>
             </div>
             <!-- Nút chuyển theme -->
-            <button id="themeToggle" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors focus:outline-none">
+            <button id="themeToggle"
+                class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors focus:outline-none">
                 <!-- Icon Sun (hiển thị ở chế độ Dark) -->
-                <svg id="icon-sun" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                <svg id="icon-sun" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z">
+                    </path>
+                </svg>
                 <!-- Icon Moon (hiển thị ở chế độ Light) -->
-                <svg id="icon-moon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                <svg id="icon-moon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                    </path>
+                </svg>
             </button>
         </div>
 
         <div class="flex-1 overflow-y-auto p-5 space-y-6">
-            
+
             <!-- Phần Kết Nối COM -->
             <div class="space-y-3">
                 <h2 class="font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <svg class="w-5 h-5 text-blue-500 dark:text-blue-400" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                    </svg>
                     Kết Nối Serial (COM)
                 </h2>
                 <div class="flex items-end gap-2">
                     <div class="flex-1">
-                        <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Baud Rate</label>
-                        <select id="baudRate" class="w-full border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border h-[42px]">
+                        <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Baud
+                            Rate</label>
+                        <select id="baudRate"
+                            class="w-full border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border h-[42px]">
                             <option value="9600">9600</option>
                             <option value="115200" selected>115200</option>
                             <option value="250000">250000</option>
                             <option value="500000">500000</option>
                         </select>
                     </div>
-                    <button id="btnToggleConnect" class="flex-1 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white py-2 rounded-md transition font-medium text-sm border-transparent border focus:ring-2 focus:ring-blue-500 focus:outline-none h-[42px]">
+                    <button id="btnToggleConnect"
+                        class="flex-1 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white py-2 rounded-md transition font-medium text-sm border-transparent border focus:ring-2 focus:ring-blue-500 focus:outline-none h-[42px]">
                         Connect
                     </button>
+                </div>
+
+                <!-- Hiển thị Trạng thái Truyền thông -->
+                <div class="grid grid-cols-3 gap-2 text-xs text-center mt-2">
+                    <div class="bg-slate-50 dark:bg-slate-700/50 py-1.5 rounded border border-slate-200 dark:border-slate-700">
+                        <span class="text-slate-500 dark:text-slate-400 block mb-0.5">RX</span>
+                        <span id="lblRxCount" class="font-mono font-bold text-slate-700 dark:text-slate-200">0</span>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-700/50 py-1.5 rounded border border-slate-200 dark:border-slate-700">
+                        <span class="text-slate-500 dark:text-slate-400 block mb-0.5">CRC Err</span>
+                        <span id="lblCrcErr" class="font-mono font-bold text-rose-500">0</span>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-700/50 py-1.5 rounded border border-slate-200 dark:border-slate-700">
+                        <span class="text-slate-500 dark:text-slate-400 block mb-0.5">Freq (Hz)</span>
+                        <span id="lblFreq" class="font-mono font-bold text-blue-500">--</span>
+                    </div>
                 </div>
             </div>
 
@@ -89,20 +133,33 @@
             <!-- Data & Export -->
             <div class="space-y-3">
                 <h2 class="font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                    </svg>
                     Dữ Liệu
                 </h2>
-                <div class="flex justify-between items-center bg-slate-50 dark:bg-slate-700/50 p-2 rounded border border-slate-200 dark:border-slate-600 text-sm">
-                    <span class="dark:text-slate-300">Mẫu đã thu thập:</span>
+                <div
+                    class="flex justify-between items-center bg-slate-50 dark:bg-slate-700/50 p-2 rounded border border-slate-200 dark:border-slate-600 text-sm">
+                    <span class="dark:text-slate-300">Mẫu đã lưu vào bộ đệm:</span>
                     <span id="lblDataCount" class="font-mono font-bold text-blue-600 dark:text-blue-400">0</span>
                 </div>
-                <div class="flex gap-2">
-                    <button id="btnClearData" class="flex-1 bg-rose-500 hover:bg-rose-600 dark:bg-rose-600 dark:hover:bg-rose-700 text-white py-2 rounded-md transition font-medium text-sm">
-                        Xóa Data
+                <div class="space-y-2">
+                    <button id="btnToggleRecord"
+                        class="w-full bg-slate-600 hover:bg-slate-700 dark:bg-slate-500 dark:hover:bg-slate-600 text-white py-2 rounded-md transition font-medium text-sm flex items-center justify-center">
+                        <span id="recordIndicator" class="w-3 h-3 bg-slate-400 rounded-full mr-2"></span>
+                        <span id="recordText">Bắt đầu Ghi (Record)</span>
                     </button>
-                    <button id="btnExportCSV" class="flex-1 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white py-2 rounded-md transition font-medium text-sm">
-                        Xuất CSV
-                    </button>
+                    <div class="flex gap-2">
+                        <button id="btnClearData"
+                            class="flex-1 bg-rose-500 hover:bg-rose-600 dark:bg-rose-600 dark:hover:bg-rose-700 text-white py-2 rounded-md transition font-medium text-sm">
+                            Xóa Data
+                        </button>
+                        <button id="btnExportCSV"
+                            class="flex-1 bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600 text-white py-2 rounded-md transition font-medium text-sm">
+                            Xuất CSV
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -110,43 +167,55 @@
 
             <!-- Cấu Hình Chế Độ & Tham Số -->
             <div class="space-y-4">
-                
+
                 <!-- Mode Parameters -->
                 <div class="space-y-2">
                     <h2 class="font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">
-                        <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                        <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4">
+                            </path>
+                        </svg>
                         Chế Độ & Mục Tiêu
                     </h2>
-                    <div class="bg-slate-50 dark:bg-slate-700/30 p-3 rounded-lg border border-slate-200 dark:border-slate-700/80 space-y-3">
+                    <div
+                        class="bg-slate-50 dark:bg-slate-700/30 p-3 rounded-lg border border-slate-200 dark:border-slate-700/80 space-y-3">
                         <div>
-                            <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Chế độ vận hành</label>
-                            <select id="p_mode" class="w-full border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border text-sm">
+                            <label class="block text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">Chế độ vận
+                                hành</label>
+                            <select id="p_mode"
+                                class="w-full border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border text-sm">
                                 <option value="0">Tự động (Auto)</option>
                                 <option value="1" selected>Thủ công tĩnh (Manual)</option>
                                 <option value="2">Xung bước (Step Wave)</option>
                                 <option value="3">Dao động (Oscillation)</option>
                             </select>
                         </div>
-                        
+
                         <!-- Vùng nhập liệu động dựa theo Mode -->
                         <div id="div_depth_target" class="hidden transition-opacity">
                             <label class="block text-xs mb-1 dark:text-slate-300">Depth Target (Auto)</label>
-                            <input type="number" id="p_depth_target" value="0.0" step="0.5" class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
+                            <input type="number" id="p_depth_target" value="0.0" step="0.5"
+                                class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
-                        
+
                         <div id="div_sp_ref" class="transition-opacity">
-                            <label class="block text-xs mb-1 dark:text-slate-300">SP Ref (<i class="font-serif">α</i> tĩnh)</label>
-                            <input type="number" id="p_sp_ref" value="0.0" step="0.5" class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
+                            <label class="block text-xs mb-1 dark:text-slate-300">SP Ref (<i class="font-serif">α</i>
+                                tĩnh)</label>
+                            <input type="number" id="p_sp_ref" value="0.0" step="0.5"
+                                class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
 
                         <div id="div_signal_params" class="hidden grid-cols-2 gap-2 transition-opacity">
                             <div>
                                 <label class="block text-xs mb-1 dark:text-slate-300">Biên độ (Amp)</label>
-                                <input type="number" id="p_sp_amp" value="10.0" step="0.5" class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
+                                <input type="number" id="p_sp_amp" value="10.0" step="0.5"
+                                    class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                             </div>
                             <div>
                                 <label class="block text-xs mb-1 dark:text-slate-300">Tần số (Hz)</label>
-                                <input type="number" id="p_sp_freq" value="0.1" step="0.01" class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
+                                <input type="number" id="p_sp_freq" value="0.1" step="0.01"
+                                    class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                             </div>
                         </div>
                     </div>
@@ -155,90 +224,140 @@
                 <hr class="border-slate-200 dark:border-slate-700">
 
                 <h2 class="font-semibold text-slate-700 dark:text-slate-200 flex items-center gap-2">
-                    <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
                     Tham Số Điều Khiển
                 </h2>
-                
+
                 <!-- SMC Parameters -->
-                <div class="bg-slate-50 dark:bg-slate-700/30 p-3 rounded-lg border border-slate-200 dark:border-slate-700/80 space-y-2">
-                    <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Sliding Mode (SMC) & Surface</h3>
+                <div
+                    class="bg-slate-50 dark:bg-slate-700/30 p-3 rounded-lg border border-slate-200 dark:border-slate-700/80 space-y-2">
+                    <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Sliding Mode (SMC) &
+                        Surface</h3>
                     <div class="grid grid-cols-3 gap-2">
                         <div>
-                            <label class="block text-xs mb-1 dark:text-slate-300"><i class="font-serif">K<sub>p</sub></i></label>
-                            <input type="number" id="p_kp" value="1.0" step="0.1" class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
+                            <label class="block text-xs mb-1 dark:text-slate-300"><i
+                                    class="font-serif">K<sub>p</sub></i></label>
+                            <input type="number" id="p_kp" value="1.0" step="0.1"
+                                class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                         <div>
-                            <label class="block text-xs mb-1 dark:text-slate-300"><i class="font-serif">K<sub>i</sub></i></label>
-                            <input type="number" id="p_ki" value="0.1" step="0.01" class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
+                            <label class="block text-xs mb-1 dark:text-slate-300"><i
+                                    class="font-serif">K<sub>i</sub></i></label>
+                            <input type="number" id="p_ki" value="0.1" step="0.01"
+                                class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                         <div>
-                            <label class="block text-xs mb-1 dark:text-slate-300"><i class="font-serif">K<sub>d</sub></i></label>
-                            <input type="number" id="p_kd" value="0.05" step="0.01" class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
+                            <label class="block text-xs mb-1 dark:text-slate-300"><i
+                                    class="font-serif">K<sub>d</sub></i></label>
+                            <input type="number" id="p_kd" value="0.05" step="0.01"
+                                class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                     </div>
                 </div>
 
                 <!-- STA Parameters -->
-                <div class="bg-slate-50 dark:bg-slate-700/30 p-3 rounded-lg border border-slate-200 dark:border-slate-700/80 space-y-2">
+                <div
+                    class="bg-slate-50 dark:bg-slate-700/30 p-3 rounded-lg border border-slate-200 dark:border-slate-700/80 space-y-2">
                     <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Super-Twisting (STA)</h3>
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block text-xs mb-1 dark:text-slate-300"><i class="font-serif">k<sub>1</sub></i> (<i class="font-serif">α</i>)</label>
-                            <input type="number" id="p_k1" value="2.5" step="0.1" class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
+                            <label class="block text-xs mb-1 dark:text-slate-300"><i
+                                    class="font-serif">k<sub>1</sub></i> (<i class="font-serif">α</i>)</label>
+                            <input type="number" id="p_k1" value="2.5" step="0.1"
+                                class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                         <div>
-                            <label class="block text-xs mb-1 dark:text-slate-300"><i class="font-serif">k<sub>2</sub></i> (<i class="font-serif">β</i>)</label>
-                            <input type="number" id="p_k2" value="1.2" step="0.1" class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
+                            <label class="block text-xs mb-1 dark:text-slate-300"><i
+                                    class="font-serif">k<sub>2</sub></i> (<i class="font-serif">β</i>)</label>
+                            <input type="number" id="p_k2" value="1.2" step="0.1"
+                                class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                     </div>
                 </div>
 
                 <!-- Smith Predictor Parameters -->
-                <div class="bg-slate-50 dark:bg-slate-700/30 p-3 rounded-lg border border-slate-200 dark:border-slate-700/80 space-y-2">
+                <div
+                    class="bg-slate-50 dark:bg-slate-700/30 p-3 rounded-lg border border-slate-200 dark:border-slate-700/80 space-y-2">
                     <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Smith Predictor (SP)</h3>
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block text-xs mb-1 dark:text-slate-300">Model <i class="font-serif">K</i></label>
-                            <input type="number" id="p_mk" value="1.0" step="0.1" class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
+                            <label class="block text-xs mb-1 dark:text-slate-300">Model <i
+                                    class="font-serif">K</i></label>
+                            <input type="number" id="p_mk" value="1.0" step="0.1"
+                                class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                         <div>
-                            <label class="block text-xs mb-1 dark:text-slate-300">Model <i class="font-serif">T</i></label>
-                            <input type="number" id="p_mt" value="5.0" step="0.1" class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
+                            <label class="block text-xs mb-1 dark:text-slate-300">Model <i
+                                    class="font-serif">T</i></label>
+                            <input type="number" id="p_mt" value="5.0" step="0.1"
+                                class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                         <div class="col-span-2">
-                            <label class="block text-xs mb-1 dark:text-slate-300">Delay <i class="font-serif">L</i> (ms)</label>
-                            <input type="number" id="p_ml" value="200" step="10" class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
+                            <label class="block text-xs mb-1 dark:text-slate-300">Delay <i class="font-serif">L</i>
+                                (ms)</label>
+                            <input type="number" id="p_ml" value="200" step="10"
+                                class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                     </div>
                 </div>
 
                 <!-- Filter Parameters -->
-                <div class="bg-slate-50 dark:bg-slate-700/30 p-3 rounded-lg border border-slate-200 dark:border-slate-700/80 space-y-2">
-                    <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Bộ Lọc (Filters) - Hz</h3>
+                <div
+                    class="bg-slate-50 dark:bg-slate-700/30 p-3 rounded-lg border border-slate-200 dark:border-slate-700/80 space-y-2">
+                    <h3 class="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase">Bộ Lọc (Filters) - Hz
+                    </h3>
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="block text-xs mb-1 dark:text-slate-300">Lifting (<i class="font-serif">f<sub>c_lift</sub></i>)</label>
-                            <input type="number" id="p_fc_lift" value="10" step="0.5" class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
+                            <label class="block text-xs mb-1 dark:text-slate-300">Lifting (<i
+                                    class="font-serif">f<sub>c_lift</sub></i>)</label>
+                            <input type="number" id="p_fc_lift" value="10" step="0.5"
+                                class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                         <div>
-                            <label class="block text-xs mb-1 dark:text-slate-300">Tailboard (<i class="font-serif">f<sub>c_tail</sub></i>)</label>
-                            <input type="number" id="p_fc_tail" value="10" step="0.5" class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
+                            <label class="block text-xs mb-1 dark:text-slate-300">Tailboard (<i
+                                    class="font-serif">f<sub>c_tail</sub></i>)</label>
+                            <input type="number" id="p_fc_tail" value="10" step="0.5"
+                                class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                         <div>
-                            <label class="block text-xs mb-1 dark:text-slate-300">de Filter (<i class="font-serif">f<sub>c_de</sub></i>)</label>
-                            <input type="number" id="p_fc_de" value="20" step="0.5" class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
+                            <label class="block text-xs mb-1 dark:text-slate-300">de Filter (<i
+                                    class="font-serif">f<sub>c_de</sub></i>)</label>
+                            <input type="number" id="p_fc_de" value="20" step="0.5"
+                                class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                         <div>
-                            <label class="block text-xs mb-1 dark:text-slate-300">Refer (<i class="font-serif">f<sub>c_ref</sub></i>)</label>
-                            <input type="number" id="p_fc_ref" value="5" step="0.5" class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
+                            <label class="block text-xs mb-1 dark:text-slate-300">Refer (<i
+                                    class="font-serif">f<sub>c_ref</sub></i>)</label>
+                            <input type="number" id="p_fc_ref" value="5" step="0.5"
+                                class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                     </div>
                 </div>
 
-                <button id="btnSendParams" class="w-full bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 text-white py-2 rounded-md transition font-medium text-sm flex justify-center items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                    Cập Nhật Tham Số Xuống Board
-                </button>
+                <div class="flex gap-2">
+                    <button id="btnToggleStart"
+                        class="flex-1 bg-green-600 hover:bg-green-700 dark:bg-green-500 dark:hover:bg-green-600 text-white py-2 rounded-md transition font-medium text-sm flex justify-center items-center gap-1 shadow-sm">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M4 4l12 6-12 6z" />
+                        </svg>
+                        <span id="startText">Bắt Đầu (Start)</span>
+                    </button>
+                    <button id="btnSendParams"
+                        class="flex-1 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600 text-white py-2 rounded-md transition font-medium text-sm flex justify-center items-center gap-1 shadow-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                            </path>
+                        </svg>
+                        Cập Nhật
+                    </button>
+                </div>
             </div>
 
         </div>
@@ -247,29 +366,11 @@
     <!-- CỘT BÊN PHẢI: BIỂU ĐỒ -->
     <div class="flex-1 p-6 overflow-y-auto flex flex-col gap-6">
 
-        <!-- Hướng dẫn nhanh -->
-        <div class="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500 p-4 rounded shadow-sm text-sm text-blue-800 dark:text-blue-300 transition-colors duration-300 flex-shrink-0">
-            <strong class="dark:text-blue-200 block mb-2">Giao thức nhị phân (Binary Protocol) áp dụng cho C++:</strong> 
-            <p class="text-[11px] mb-2 font-mono whitespace-pre-wrap overflow-x-auto text-slate-700 dark:text-slate-300">#pragma pack(push, 1) // Hoặc __attribute__((packed))
-struct RxPayload { // MCU gửi lên PC (Đúng thứ tự)
-    float time_s, y_pred, est_depth, mode;
-    float lift_raw, lift_filt, tail_raw, tail_filt, dot_alpha_raw;
-    float depth_target, sp_ref, dot_alpha_ref, ddot_alpha_ref, alpha_manual, omega_ref;
-    float e, de, s, u, u_eq, u_sw, u_sw_i;
-    float Kp, Ki, Kd, K1, K2, K, tau1, L, fc_lift, fc_tail, lift_offset, tail_offset, e_int;
-}; // Tổng cộng 35 floats = 140 bytes
-
-struct TxPayload { // PC gửi xuống MCU
-    float mode, depth_target, sp_ref, sp_amp, sp_freq;
-    float Kp, Ki, Kd, K1, K2, K, tau1, L, fc_lift, fc_tail, fc_de, fc_ref;
-}; // Tổng cộng 17 floats = 68 bytes
-#pragma pack(pop)</p>
-            <span class="text-xs italic dark:text-blue-400">Cách gửi: <code>[0x55, 0xAA] + [RxPayload_Bytes] + [XOR_Checksum_Of_Payload]</code></span>
-        </div>
-
         <!-- Chart 1: Setpoint vs Output vs Predicted -->
-        <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md h-80 flex-shrink-0 transition-colors duration-300">
-            <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Đáp Ứng Hệ Thống (Setpoint vs Thực Tế <i class="font-serif">y</i> vs Dự Đoán <i class="font-serif">y<sub>p</sub></i>)</h3>
+        <div
+            class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md h-80 flex-shrink-0 transition-colors duration-300">
+            <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Đáp Ứng Hệ Thống (Setpoint vs Thực
+                Tế <i class="font-serif">y</i> vs Dự Đoán <i class="font-serif">y<sub>p</sub></i>)</h3>
             <div class="relative h-[90%] w-full">
                 <canvas id="chartResponse"></canvas>
             </div>
@@ -278,32 +379,50 @@ struct TxPayload { // PC gửi xuống MCU
         <!-- ===== THẺ GIÁ TRỊ TỔNG QUÁT (SUMMARY CARDS) ===== -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 flex-shrink-0">
             <!-- Setpoint -->
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
-                <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Setpoint (<i class="font-serif text-xs">sp_ref</i>)</span>
-                <span id="val-setpoint" class="text-3xl font-bold text-blue-500 dark:text-[#3b82f6] font-mono">0.0</span>
+            <div
+                class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
+                <span
+                    class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Setpoint
+                    (<i class="font-serif text-xs">sp_ref</i>)</span>
+                <span id="val-setpoint"
+                    class="text-3xl font-bold text-blue-500 dark:text-[#3b82f6] font-mono">0.0</span>
             </div>
             <!-- Current Value -->
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
-                <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Current Value (<i class="font-serif text-xs">est_depth</i>)</span>
-                <span id="val-current" class="text-3xl font-bold text-emerald-500 dark:text-[#22c55e] font-mono">0.0</span>
+            <div
+                class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
+                <span
+                    class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Current
+                    Value (<i class="font-serif text-xs">est_depth</i>)</span>
+                <span id="val-current"
+                    class="text-3xl font-bold text-emerald-500 dark:text-[#22c55e] font-mono">0.0</span>
             </div>
             <!-- Error -->
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
-                <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Error (<i class="font-serif text-xs">e</i>)</span>
+            <div
+                class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
+                <span
+                    class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Error
+                    (<i class="font-serif text-xs">e</i>)</span>
                 <span id="val-error" class="text-3xl font-bold text-rose-500 dark:text-[#fb7185] font-mono">-0.0</span>
             </div>
             <!-- Response Time -->
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
-                <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Response Time</span>
-                <span id="val-time" class="text-xl sm:text-2xl font-bold text-green-500 font-mono truncate w-full text-center">0.00 s</span>
+            <div
+                class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
+                <span
+                    class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Response
+                    Time</span>
+                <span id="val-time"
+                    class="text-xl sm:text-2xl font-bold text-green-500 font-mono truncate w-full text-center">0.00
+                    s</span>
             </div>
         </div>
 
         <!-- Grid cho Chart 2 đến 10 -->
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-6 flex-shrink-0">
             <!-- Chart 2: Control Signal (u) -->
-            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col xl:col-span-2 transition-colors duration-300">
-                <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Tổng Tín Hiệu Điều Khiển (<i class="font-serif">u</i>)</h3>
+            <div
+                class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col xl:col-span-2 transition-colors duration-300">
+                <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Tổng Tín Hiệu Điều Khiển (<i
+                        class="font-serif">u</i>)</h3>
                 <div class="relative h-[250px] w-full shrink-0">
                     <canvas id="chartControl"></canvas>
                 </div>
@@ -311,16 +430,20 @@ struct TxPayload { // PC gửi xuống MCU
 
             <!-- ===== HÀNG 1 ===== -->
             <!-- Chart 3: Sliding Surface (s) -->
-            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col transition-colors duration-300">
-                <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Mặt Trượt (<i class="font-serif">s</i>)</h3>
+            <div
+                class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col transition-colors duration-300">
+                <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Mặt Trượt (<i
+                        class="font-serif">s</i>)</h3>
                 <div class="relative h-[250px] w-full shrink-0">
                     <canvas id="chartSliding"></canvas>
                 </div>
             </div>
 
             <!-- Chart 6: Sliding Surface Components (e, e_int, de) -->
-            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col transition-colors duration-300">
-                <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Thành Phần Đóng Góp Vào Mặt Trượt (<i class="font-serif">P, I, D</i>)</h3>
+            <div
+                class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col transition-colors duration-300">
+                <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Thành Phần Đóng Góp Vào Mặt
+                    Trượt (<i class="font-serif">P, I, D</i>)</h3>
                 <div class="relative h-[250px] w-full shrink-0">
                     <canvas id="chartSComponents"></canvas>
                 </div>
@@ -328,35 +451,60 @@ struct TxPayload { // PC gửi xuống MCU
 
             <!-- Thẻ giá trị Thành Phần Mặt Trượt -->
             <div class="grid grid-cols-3 gap-2 sm:gap-4 xl:col-span-2">
-                <div class="bg-white dark:bg-slate-800 rounded-xl p-3 sm:p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
-                    <span class="text-slate-500 dark:text-slate-400 text-[8px] sm:text-[10px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1" title="P (Kp*e)"><i class="font-serif text-sm">P</i> (<i class="font-serif text-xs">K<sub>p</sub> &middot; e</i>)</span>
-                    <span id="val-s-p" class="text-lg sm:text-2xl lg:text-3xl font-bold text-red-500 dark:text-[#ef4444] font-mono truncate w-full text-center">0.0</span>
-                    <span class="text-slate-400 dark:text-slate-500 text-[8px] sm:text-[10px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max: <span id="max-s-p">0.0</span></span>
+                <div
+                    class="bg-white dark:bg-slate-800 rounded-xl p-3 sm:p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
+                    <span
+                        class="text-slate-500 dark:text-slate-400 text-[8px] sm:text-[10px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1"
+                        title="P (Kp*e)"><i class="font-serif text-sm">P</i> (<i
+                            class="font-serif text-xs">K<sub>p</sub> &middot; e</i>)</span>
+                    <span id="val-s-p"
+                        class="text-lg sm:text-2xl lg:text-3xl font-bold text-red-500 dark:text-[#ef4444] font-mono truncate w-full text-center">0.0</span>
+                    <span
+                        class="text-slate-400 dark:text-slate-500 text-[8px] sm:text-[10px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max:
+                        <span id="max-s-p">0.0</span></span>
                 </div>
-                <div class="bg-white dark:bg-slate-800 rounded-xl p-3 sm:p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
-                    <span class="text-slate-500 dark:text-slate-400 text-[8px] sm:text-[10px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1" title="I (Ki*e_int)"><i class="font-serif text-sm">I</i> (<i class="font-serif text-xs">K<sub>i</sub> &middot; &int;e</i>)</span>
-                    <span id="val-s-i" class="text-lg sm:text-2xl lg:text-3xl font-bold text-blue-500 dark:text-[#3b82f6] font-mono truncate w-full text-center">0.0</span>
-                    <span class="text-slate-400 dark:text-slate-500 text-[8px] sm:text-[10px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max: <span id="max-s-i">0.0</span></span>
+                <div
+                    class="bg-white dark:bg-slate-800 rounded-xl p-3 sm:p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
+                    <span
+                        class="text-slate-500 dark:text-slate-400 text-[8px] sm:text-[10px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1"
+                        title="I (Ki*e_int)"><i class="font-serif text-sm">I</i> (<i
+                            class="font-serif text-xs">K<sub>i</sub> &middot; &int;e</i>)</span>
+                    <span id="val-s-i"
+                        class="text-lg sm:text-2xl lg:text-3xl font-bold text-blue-500 dark:text-[#3b82f6] font-mono truncate w-full text-center">0.0</span>
+                    <span
+                        class="text-slate-400 dark:text-slate-500 text-[8px] sm:text-[10px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max:
+                        <span id="max-s-i">0.0</span></span>
                 </div>
-                <div class="bg-white dark:bg-slate-800 rounded-xl p-3 sm:p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
-                    <span class="text-slate-500 dark:text-slate-400 text-[8px] sm:text-[10px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1" title="D (Kd*de)"><i class="font-serif text-sm">D</i> (<i class="font-serif text-xs">K<sub>d</sub> &middot; e&#x0307;</i>)</span>
-                    <span id="val-s-d" class="text-lg sm:text-2xl lg:text-3xl font-bold text-emerald-500 dark:text-[#10b981] font-mono truncate w-full text-center">0.0</span>
-                    <span class="text-slate-400 dark:text-slate-500 text-[8px] sm:text-[10px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max: <span id="max-s-d">0.0</span></span>
+                <div
+                    class="bg-white dark:bg-slate-800 rounded-xl p-3 sm:p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
+                    <span
+                        class="text-slate-500 dark:text-slate-400 text-[8px] sm:text-[10px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1"
+                        title="D (Kd*de)"><i class="font-serif text-sm">D</i> (<i
+                            class="font-serif text-xs">K<sub>d</sub> &middot; e&#x0307;</i>)</span>
+                    <span id="val-s-d"
+                        class="text-lg sm:text-2xl lg:text-3xl font-bold text-emerald-500 dark:text-[#10b981] font-mono truncate w-full text-center">0.0</span>
+                    <span
+                        class="text-slate-400 dark:text-slate-500 text-[8px] sm:text-[10px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max:
+                        <span id="max-s-d">0.0</span></span>
                 </div>
             </div>
 
             <!-- ===== HÀNG 2 ===== -->
             <!-- Chart 4: Control Component (u_eq) -->
-            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col transition-colors duration-300">
-                <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Tín Hiệu Tương Đương (<i class="font-serif">u<sub>eq</sub></i>)</h3>
+            <div
+                class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col transition-colors duration-300">
+                <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Tín Hiệu Tương Đương (<i
+                        class="font-serif">u<sub>eq</sub></i>)</h3>
                 <div class="relative h-[250px] w-full shrink-0">
                     <canvas id="chartUeq"></canvas>
                 </div>
             </div>
 
             <!-- Chart 7: u_eq Components -->
-            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col transition-colors duration-300">
-                <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Thành Phần Của <i class="font-serif">u<sub>eq</sub></i></h3>
+            <div
+                class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col transition-colors duration-300">
+                <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Thành Phần Của <i
+                        class="font-serif">u<sub>eq</sub></i></h3>
                 <div class="relative h-[250px] w-full shrink-0">
                     <canvas id="chartUeqComponents"></canvas>
                 </div>
@@ -364,45 +512,86 @@ struct TxPayload { // PC gửi xuống MCU
 
             <!-- Thẻ giá trị u_eq -->
             <div class="grid grid-cols-5 gap-1 sm:gap-3 xl:col-span-2">
-                <div class="bg-white dark:bg-slate-800 rounded-xl p-2 sm:p-4 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
-                    <span class="text-slate-500 dark:text-slate-400 text-[7px] sm:text-[9px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1" title="(a1*α_dot)/b">(<i class="font-serif text-[10px]">a<sub>1</sub> &middot; α&#x0307;</i>) / <i class="font-serif text-[10px]">b</i></span>
-                    <span id="val-ueq-1" class="text-sm sm:text-xl lg:text-2xl font-bold text-violet-500 dark:text-[#8b5cf6] font-mono truncate w-full text-center">0.0</span>
-                    <span class="text-slate-400 dark:text-slate-500 text-[7px] sm:text-[9px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max: <span id="max-ueq-1">0.0</span></span>
+                <div
+                    class="bg-white dark:bg-slate-800 rounded-xl p-2 sm:p-4 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
+                    <span
+                        class="text-slate-500 dark:text-slate-400 text-[7px] sm:text-[9px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1"
+                        title="(a1*α_dot)/b">(<i class="font-serif text-[10px]">a<sub>1</sub> &middot; α&#x0307;</i>) /
+                        <i class="font-serif text-[10px]">b</i></span>
+                    <span id="val-ueq-1"
+                        class="text-sm sm:text-xl lg:text-2xl font-bold text-violet-500 dark:text-[#8b5cf6] font-mono truncate w-full text-center">0.0</span>
+                    <span
+                        class="text-slate-400 dark:text-slate-500 text-[7px] sm:text-[9px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max:
+                        <span id="max-ueq-1">0.0</span></span>
                 </div>
-                <div class="bg-white dark:bg-slate-800 rounded-xl p-2 sm:p-4 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
-                    <span class="text-slate-500 dark:text-slate-400 text-[7px] sm:text-[9px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1" title="(a2*yp)/b">(<i class="font-serif text-[10px]">a<sub>2</sub> &middot; y<sub>p</sub></i>) / <i class="font-serif text-[10px]">b</i></span>
-                    <span id="val-ueq-2" class="text-sm sm:text-xl lg:text-2xl font-bold text-orange-500 dark:text-[#f97316] font-mono truncate w-full text-center">0.0</span>
-                    <span class="text-slate-400 dark:text-slate-500 text-[7px] sm:text-[9px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max: <span id="max-ueq-2">0.0</span></span>
+                <div
+                    class="bg-white dark:bg-slate-800 rounded-xl p-2 sm:p-4 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
+                    <span
+                        class="text-slate-500 dark:text-slate-400 text-[7px] sm:text-[9px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1"
+                        title="(a2*yp)/b">(<i class="font-serif text-[10px]">a<sub>2</sub> &middot; y<sub>p</sub></i>) /
+                        <i class="font-serif text-[10px]">b</i></span>
+                    <span id="val-ueq-2"
+                        class="text-sm sm:text-xl lg:text-2xl font-bold text-orange-500 dark:text-[#f97316] font-mono truncate w-full text-center">0.0</span>
+                    <span
+                        class="text-slate-400 dark:text-slate-500 text-[7px] sm:text-[9px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max:
+                        <span id="max-ueq-2">0.0</span></span>
                 </div>
-                <div class="bg-white dark:bg-slate-800 rounded-xl p-2 sm:p-4 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
-                    <span class="text-slate-500 dark:text-slate-400 text-[7px] sm:text-[9px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1" title="(ddot_ref)/b"><i class="font-serif text-[10px]">α&#x0308;<sub>ref</sub></i> / <i class="font-serif text-[10px]">b</i></span>
-                    <span id="val-ueq-3" class="text-sm sm:text-xl lg:text-2xl font-bold text-teal-500 dark:text-[#14b8a6] font-mono truncate w-full text-center">0.0</span>
-                    <span class="text-slate-400 dark:text-slate-500 text-[7px] sm:text-[9px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max: <span id="max-ueq-3">0.0</span></span>
+                <div
+                    class="bg-white dark:bg-slate-800 rounded-xl p-2 sm:p-4 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
+                    <span
+                        class="text-slate-500 dark:text-slate-400 text-[7px] sm:text-[9px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1"
+                        title="(ddot_ref)/b"><i class="font-serif text-[10px]">α&#x0308;<sub>ref</sub></i> / <i
+                            class="font-serif text-[10px]">b</i></span>
+                    <span id="val-ueq-3"
+                        class="text-sm sm:text-xl lg:text-2xl font-bold text-teal-500 dark:text-[#14b8a6] font-mono truncate w-full text-center">0.0</span>
+                    <span
+                        class="text-slate-400 dark:text-slate-500 text-[7px] sm:text-[9px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max:
+                        <span id="max-ueq-3">0.0</span></span>
                 </div>
-                <div class="bg-white dark:bg-slate-800 rounded-xl p-2 sm:p-4 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
-                    <span class="text-slate-500 dark:text-slate-400 text-[7px] sm:text-[9px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1" title="-(Kp/Kd*de)/b">-(<i class="font-serif text-[10px]">K<sub>p</sub> / K<sub>d</sub></i>) &middot; <i class="font-serif text-[10px]">e&#x0307;</i> / <i class="font-serif text-[10px]">b</i></span>
-                    <span id="val-ueq-4" class="text-sm sm:text-xl lg:text-2xl font-bold text-red-500 dark:text-[#ef4444] font-mono truncate w-full text-center">0.0</span>
-                    <span class="text-slate-400 dark:text-slate-500 text-[7px] sm:text-[9px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max: <span id="max-ueq-4">0.0</span></span>
+                <div
+                    class="bg-white dark:bg-slate-800 rounded-xl p-2 sm:p-4 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
+                    <span
+                        class="text-slate-500 dark:text-slate-400 text-[7px] sm:text-[9px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1"
+                        title="-(Kp/Kd*de)/b">-(<i class="font-serif text-[10px]">K<sub>p</sub> / K<sub>d</sub></i>)
+                        &middot; <i class="font-serif text-[10px]">e&#x0307;</i> / <i
+                            class="font-serif text-[10px]">b</i></span>
+                    <span id="val-ueq-4"
+                        class="text-sm sm:text-xl lg:text-2xl font-bold text-red-500 dark:text-[#ef4444] font-mono truncate w-full text-center">0.0</span>
+                    <span
+                        class="text-slate-400 dark:text-slate-500 text-[7px] sm:text-[9px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max:
+                        <span id="max-ueq-4">0.0</span></span>
                 </div>
-                <div class="bg-white dark:bg-slate-800 rounded-xl p-2 sm:p-4 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
-                    <span class="text-slate-500 dark:text-slate-400 text-[7px] sm:text-[9px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1" title="-(Ki/Kd*e)/b">-(<i class="font-serif text-[10px]">K<sub>i</sub> / K<sub>d</sub></i>) &middot; <i class="font-serif text-[10px]">e</i> / <i class="font-serif text-[10px]">b</i></span>
-                    <span id="val-ueq-5" class="text-sm sm:text-xl lg:text-2xl font-bold text-blue-500 dark:text-[#3b82f6] font-mono truncate w-full text-center">0.0</span>
-                    <span class="text-slate-400 dark:text-slate-500 text-[7px] sm:text-[9px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max: <span id="max-ueq-5">0.0</span></span>
+                <div
+                    class="bg-white dark:bg-slate-800 rounded-xl p-2 sm:p-4 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
+                    <span
+                        class="text-slate-500 dark:text-slate-400 text-[7px] sm:text-[9px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1"
+                        title="-(Ki/Kd*e)/b">-(<i class="font-serif text-[10px]">K<sub>i</sub> / K<sub>d</sub></i>)
+                        &middot; <i class="font-serif text-[10px]">e</i> / <i
+                            class="font-serif text-[10px]">b</i></span>
+                    <span id="val-ueq-5"
+                        class="text-sm sm:text-xl lg:text-2xl font-bold text-blue-500 dark:text-[#3b82f6] font-mono truncate w-full text-center">0.0</span>
+                    <span
+                        class="text-slate-400 dark:text-slate-500 text-[7px] sm:text-[9px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max:
+                        <span id="max-ueq-5">0.0</span></span>
                 </div>
             </div>
 
             <!-- ===== HÀNG 3 ===== -->
             <!-- Chart 5: Control Component (u_sw) -->
-            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col transition-colors duration-300">
-                <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Tín Hiệu Chuyển Mạch (<i class="font-serif">u<sub>sw</sub></i>)</h3>
+            <div
+                class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col transition-colors duration-300">
+                <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Tín Hiệu Chuyển Mạch (<i
+                        class="font-serif">u<sub>sw</sub></i>)</h3>
                 <div class="relative h-[250px] w-full shrink-0">
                     <canvas id="chartUsw"></canvas>
                 </div>
             </div>
 
             <!-- Chart 8: u_sw Components -->
-            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col transition-colors duration-300">
-                <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Thành Phần Của <i class="font-serif">u<sub>sw</sub></i></h3>
+            <div
+                class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col transition-colors duration-300">
+                <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Thành Phần Của <i
+                        class="font-serif">u<sub>sw</sub></i></h3>
                 <div class="relative h-[250px] w-full shrink-0">
                     <canvas id="chartUswComponents"></canvas>
                 </div>
@@ -410,21 +599,35 @@ struct TxPayload { // PC gửi xuống MCU
 
             <!-- Thẻ giá trị u_sw -->
             <div class="grid grid-cols-2 gap-3 sm:gap-4 xl:col-span-2">
-                <div class="bg-white dark:bg-slate-800 rounded-xl p-3 sm:p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
-                    <span class="text-slate-500 dark:text-slate-400 text-[8px] sm:text-[10px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1" title="Tỉ lệ (-K1*√|s|*sgn)">-<i class="font-serif text-sm">k<sub>1</sub></i>&radic;|<i class="font-serif text-sm">s</i>| &middot; sgn(<i class="font-serif text-sm">s</i>)</span>
-                    <span id="val-usw-1" class="text-xl sm:text-2xl lg:text-3xl font-bold text-rose-500 dark:text-[#f43f5e] font-mono truncate w-full text-center">0.0</span>
-                    <span class="text-slate-400 dark:text-slate-500 text-[8px] sm:text-[10px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max: <span id="max-usw-1">0.0</span></span>
+                <div
+                    class="bg-white dark:bg-slate-800 rounded-xl p-3 sm:p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
+                    <span
+                        class="text-slate-500 dark:text-slate-400 text-[8px] sm:text-[10px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1"
+                        title="Tỉ lệ (-K1*√|s|*sgn)">-<i class="font-serif text-sm">k<sub>1</sub></i>&radic;|<i
+                            class="font-serif text-sm">s</i>| &middot; sgn(<i class="font-serif text-sm">s</i>)</span>
+                    <span id="val-usw-1"
+                        class="text-xl sm:text-2xl lg:text-3xl font-bold text-rose-500 dark:text-[#f43f5e] font-mono truncate w-full text-center">0.0</span>
+                    <span
+                        class="text-slate-400 dark:text-slate-500 text-[8px] sm:text-[10px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max:
+                        <span id="max-usw-1">0.0</span></span>
                 </div>
-                <div class="bg-white dark:bg-slate-800 rounded-xl p-3 sm:p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
-                    <span class="text-slate-500 dark:text-slate-400 text-[8px] sm:text-[10px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1" title="Tích phân (u_sw_int)">&int; <i class="font-serif text-sm">u<sub>sw</sub></i> dt</span>
-                    <span id="val-usw-2" class="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-500 dark:text-[#0ea5e9] font-mono truncate w-full text-center">0.0</span>
-                    <span class="text-slate-400 dark:text-slate-500 text-[8px] sm:text-[10px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max: <span id="max-usw-2">0.0</span></span>
+                <div
+                    class="bg-white dark:bg-slate-800 rounded-xl p-3 sm:p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300 min-w-0">
+                    <span
+                        class="text-slate-500 dark:text-slate-400 text-[8px] sm:text-[10px] font-bold tracking-widest uppercase mb-1 sm:mb-2 text-center truncate w-full px-1"
+                        title="Tích phân (u_sw_int)">&int; <i class="font-serif text-sm">u<sub>sw</sub></i> dt</span>
+                    <span id="val-usw-2"
+                        class="text-xl sm:text-2xl lg:text-3xl font-bold text-sky-500 dark:text-[#0ea5e9] font-mono truncate w-full text-center">0.0</span>
+                    <span
+                        class="text-slate-400 dark:text-slate-500 text-[8px] sm:text-[10px] mt-1 sm:mt-2 tracking-widest uppercase truncate w-full text-center">Max:
+                        <span id="max-usw-2">0.0</span></span>
                 </div>
             </div>
 
             <!-- ===== HÀNG 4 ===== -->
             <!-- Chart 9: Lifting -->
-            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col transition-colors duration-300">
+            <div
+                class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col transition-colors duration-300">
                 <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Lifting (Raw vs Filter)</h3>
                 <div class="relative h-[250px] w-full shrink-0">
                     <canvas id="chartLifting"></canvas>
@@ -432,7 +635,8 @@ struct TxPayload { // PC gửi xuống MCU
             </div>
 
             <!-- Chart 10: Tailboard -->
-            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col transition-colors duration-300">
+            <div
+                class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md flex flex-col transition-colors duration-300">
                 <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Tailboard (Raw vs Filter)</h3>
                 <div class="relative h-[250px] w-full shrink-0">
                     <canvas id="chartTailboard"></canvas>
@@ -483,19 +687,19 @@ struct TxPayload { // PC gửi xuống MCU
         function updateChartJSColor(isDark) {
             const textColor = isDark ? '#94a3b8' : '#64748b'; // slate-400 vs slate-500
             const gridColor = isDark ? '#334155' : '#e2e8f0'; // slate-700 vs slate-200
-            
+
             Chart.defaults.color = textColor;
             Chart.defaults.scale.grid.color = gridColor;
 
             // Update tất cả các chart hiện có
             const allCharts = [chartResponse, chartControl, chartUeq, chartUsw, chartSliding, chartSComp, chartUeqComp, chartUswComp, chartLifting, chartTailboard];
             allCharts.forEach(chart => {
-                if(chart) {
+                if (chart) {
                     chart.options.scales.x.ticks.color = textColor;
                     chart.options.scales.x.title.color = textColor;
                     chart.options.scales.x.grid.color = gridColor;
 
-                    if(chart.options.scales.y) {
+                    if (chart.options.scales.y) {
                         chart.options.scales.y.ticks.color = textColor;
                         chart.options.scales.y.title.color = textColor;
                         chart.options.scales.y.grid.color = gridColor;
@@ -507,20 +711,20 @@ struct TxPayload { // PC gửi xuống MCU
 
         // === GIAO DIỆN CHẾ ĐỘ (MODE SELECTOR) ===
         const p_mode = document.getElementById('p_mode');
-        
+
         const div_depth_target = document.getElementById('div_depth_target');
         const p_depth_target = document.getElementById('p_depth_target');
-        
+
         const div_sp_ref = document.getElementById('div_sp_ref');
         const p_sp_ref = document.getElementById('p_sp_ref');
-        
+
         const div_signal_params = document.getElementById('div_signal_params');
         const p_sp_amp = document.getElementById('p_sp_amp');
         const p_sp_freq = document.getElementById('p_sp_freq');
 
         p_mode.addEventListener('change', (e) => {
             const mode = parseInt(e.target.value);
-            
+
             // Hàm tiện ích bật/tắt ô nhập liệu
             const toggleInput = (div, inputContainer, enable) => {
                 if (enable) {
@@ -551,10 +755,10 @@ struct TxPayload { // PC gửi xuống MCU
 
             // 0: Auto -> Depth Target
             toggleInput(div_depth_target, p_depth_target, mode === 0);
-            
+
             // 1: Manual -> SP Ref
             toggleInput(div_sp_ref, p_sp_ref, mode === 1);
-            
+
             // 2: Step, 3: Oscillation -> Amplitude & Frequency
             if (mode === 2 || mode === 3) {
                 div_signal_params.classList.remove('hidden');
@@ -578,10 +782,11 @@ struct TxPayload { // PC gửi xuống MCU
 
         const MAX_DATA_POINTS = 300; // Số điểm hiển thị tối đa trên biểu đồ để không bị lag
         let recordedData = [];       // Lưu trữ toàn bộ data để xuất CSV
+        let isRecording = false;     // Trạng thái ghi dữ liệu
 
         // CẤU TRÚC GÓI TIN NHẬN (RX)
         // 35 tham số kiểu Float (4 bytes/số) = 140 bytes
-        const RX_PAYLOAD_SIZE = 35 * 4; 
+        const RX_PAYLOAD_SIZE = 35 * 4;
         const RX_PACKET_SIZE = 2 + RX_PAYLOAD_SIZE + 1; // Header(2) + Payload(140) + Checksum(1) = 143 bytes
         let receiveBuffer = new Uint8Array(0);
 
@@ -630,22 +835,38 @@ struct TxPayload { // PC gửi xuống MCU
         Chart.defaults.elements.line.borderWidth = 2;
         Chart.defaults.animation = false; // Tắt animation để vẽ realtime tốt hơn
 
+        // Hàm đẩy dữ liệu vào biểu đồ
+        function pushChartData(chart, label, dataArray) {
+            chart.data.labels.push(label);
+            chart.data.datasets.forEach((dataset, index) => {
+                dataset.data.push(dataArray[index]);
+            });
+
+            // Giới hạn số lượng điểm hiển thị
+            if (chart.data.labels.length > MAX_DATA_POINTS) {
+                chart.data.labels.shift();
+                chart.data.datasets.forEach(dataset => {
+                    dataset.data.shift();
+                });
+            }
+        }
+
         const commonOptions = {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
                 x: { title: { display: true, text: 'Thời gian thực' } }
             },
-            plugins: { 
-                legend: { 
-                    position: 'top', 
-                    labels: { 
-                        usePointStyle: true, 
-                        pointStyle: 'line', 
-                        boxWidth: 20, 
-                        font: { size: 10 } 
-                    } 
-                } 
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        pointStyle: 'line',
+                        boxWidth: 20,
+                        font: { size: 10 }
+                    }
+                }
             }
         };
 
@@ -790,17 +1011,24 @@ struct TxPayload { // PC gửi xuống MCU
                 try {
                     // Yêu cầu người dùng chọn port
                     port = await navigator.serial.requestPort();
-                    
+
                     // Mở port với baudrate
                     const baudRate = parseInt(document.getElementById('baudRate').value);
                     await port.open({ baudRate: baudRate });
 
                     isConnected = true;
-                    
+
                     // Cập nhật giao diện nút sang trạng thái Ngắt kết nối (Màu đỏ)
                     btnToggleConnect.innerText = "Disconnect";
                     btnToggleConnect.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'dark:bg-blue-500', 'dark:hover:bg-blue-600', 'focus:ring-blue-500');
                     btnToggleConnect.classList.add('bg-rose-500', 'hover:bg-rose-600', 'dark:bg-rose-600', 'dark:hover:bg-rose-700', 'focus:ring-rose-500');
+
+                    rxCount = 0;
+                    crcErrCount = 0;
+                    rxRateCount = 0;
+                    document.getElementById('lblRxCount').innerText = "0";
+                    document.getElementById('lblCrcErr').innerText = "0";
+                    document.getElementById('lblFreq').innerText = "0";
 
                     keepReading = true;
                     receiveBuffer = new Uint8Array(0); // Reset buffer
@@ -817,12 +1045,12 @@ struct TxPayload { // PC gửi xuống MCU
                         try {
                             await port.close();
                             isConnected = false;
-                            
+
                             // Cập nhật giao diện nút sang trạng thái Kết nối (Màu xanh)
                             btnToggleConnect.innerText = "Connect";
                             btnToggleConnect.classList.remove('bg-rose-500', 'hover:bg-rose-600', 'dark:bg-rose-600', 'dark:hover:bg-rose-700', 'focus:ring-rose-500');
                             btnToggleConnect.classList.add('bg-blue-600', 'hover:bg-blue-700', 'dark:bg-blue-500', 'dark:hover:bg-blue-600', 'focus:ring-blue-500');
-                        } catch(e) {
+                        } catch (e) {
                             console.error("Lỗi khi ngắt kết nối:", e);
                         }
                     }, 500);
@@ -852,7 +1080,7 @@ struct TxPayload { // PC gửi xuống MCU
                             // 1. Tìm Header 0x55 0xAA (Little Endian của 0xAA55)
                             let syncIndex = -1;
                             for (let i = 0; i < receiveBuffer.length - 1; i++) {
-                                if (receiveBuffer[i] === 0x55 && receiveBuffer[i+1] === 0xAA) {
+                                if (receiveBuffer[i] === 0x55 && receiveBuffer[i + 1] === 0xAA) {
                                     syncIndex = i;
                                     break;
                                 }
@@ -886,9 +1114,14 @@ struct TxPayload { // PC gửi xuống MCU
 
                             // 6. Kiểm tra tính toàn vẹn
                             if (calcChecksum === receivedChecksum) {
+                                rxCount++;
+                                rxRateCount++;
+                                document.getElementById('lblRxCount').innerText = rxCount;
                                 parseBinaryData(payload); // Hàm xử lý
                                 receiveBuffer = receiveBuffer.slice(RX_PACKET_SIZE); // Chuyển sang gói tiếp theo
                             } else {
+                                crcErrCount++;
+                                document.getElementById('lblCrcErr').innerText = crcErrCount;
                                 console.warn("Lỗi Checksum! Bỏ qua gói tin rác.");
                                 receiveBuffer = receiveBuffer.slice(2); // Dịch đi 2 byte để tìm Header tiếp theo
                             }
@@ -907,11 +1140,11 @@ struct TxPayload { // PC gửi xuống MCU
             const data = {};
             // Tạo DataView để đọc float 32-bit (little-endian)
             const view = new DataView(payloadUint8.buffer, payloadUint8.byteOffset, payloadUint8.byteLength);
-            
-            for(let i=0; i<rxKeys.length; i++) {
+
+            for (let i = 0; i < rxKeys.length; i++) {
                 data[rxKeys[i]] = view.getFloat32(i * 4, true); // true = little-endian
             }
-            
+
             processParsedData(data);
         }
 
@@ -920,14 +1153,14 @@ struct TxPayload { // PC gửi xuống MCU
             // Lấy thời gian thực (Real-time) từ hệ thống máy tính theo định dạng HH:mm:ss:SSS
             const now = new Date();
             const realTimeStr = String(now.getHours()).padStart(2, '0') + ":" +
-                                String(now.getMinutes()).padStart(2, '0') + ":" +
-                                String(now.getSeconds()).padStart(2, '0') + ":" +
-                                String(now.getMilliseconds()).padStart(3, '0');
+                String(now.getMinutes()).padStart(2, '0') + ":" +
+                String(now.getSeconds()).padStart(2, '0') + ":" +
+                String(now.getMilliseconds()).padStart(3, '0');
 
             // CHUẨN HOÁ DỮ LIỆU ĐỂ LƯU CSV
             const csvRow = {
                 // 1. Thời gian & Trạng thái hệ thống
-                "real_time": realTimeStr, 
+                "real_time": realTimeStr,
                 "time_s": data.time_s ?? 0,
                 "y_pred": data.y_pred ?? 0,
                 "est_depth": data.est_depth ?? 0,
@@ -979,9 +1212,11 @@ struct TxPayload { // PC gửi xuống MCU
                 "e_int": data.e_int ?? 0
             };
 
-            // Lưu vào mảng tổng để xuất CSV
-            recordedData.push(csvRow);
-            document.getElementById('lblDataCount').innerText = recordedData.length;
+            // CHỈ LƯU VÀO MẢNG KHI ĐANG BẬT TÍNH NĂNG RECORD
+            if (isRecording) {
+                recordedData.push(csvRow);
+                document.getElementById('lblDataCount').innerText = recordedData.length;
+            }
 
             // Tên nhãn cho trục X của Chart (Hiển thị thời gian thực HH:mm:ss:SSS)
             const t_label = realTimeStr;
@@ -990,7 +1225,7 @@ struct TxPayload { // PC gửi xuống MCU
             // --- TÍNH TOÁN THỜI GIAN ĐÁP ỨNG (RESPONSE / SETTLING TIME) ---
             const sp = csvRow.sp_ref;
             const y = csvRow.est_depth;
-            
+
             // Khởi tạo lần đầu
             if (responseTimeObj.lastSp === null) {
                 responseTimeObj.lastSp = sp;
@@ -1028,7 +1263,7 @@ struct TxPayload { // PC gửi xuống MCU
             document.getElementById('val-setpoint').innerText = (csvRow.sp_ref).toFixed(1);
             document.getElementById('val-current').innerText = (csvRow.est_depth).toFixed(1);
             document.getElementById('val-error').innerText = (csvRow.e).toFixed(2);
-            
+
             const valTimeEl = document.getElementById('val-time');
             if (responseTimeObj.isMeasuring) {
                 valTimeEl.innerText = responseTimeObj.settledTime.toFixed(2) + ' s...';
@@ -1044,7 +1279,7 @@ struct TxPayload { // PC gửi xuống MCU
             pushChartData(chartUeq, t_label, [csvRow.u_eq]);
             pushChartData(chartUsw, t_label, [csvRow.u_sw]);
             pushChartData(chartSliding, t_label, [csvRow.s]);
-            
+
             // --- Biểu đồ 6: Tính toán Thành phần mặt trượt ---
             const p_comp = csvRow.Kp * csvRow.e;
             const i_comp = csvRow.Ki * csvRow.e_int;
@@ -1069,9 +1304,9 @@ struct TxPayload { // PC gửi xuống MCU
                 const inv_b = 1.0 / b;
                 c_alpha = inv_b * a1 * csvRow.dot_alpha_raw;
                 c_ypred = inv_b * a2 * csvRow.y_pred;
-                c_ref   = inv_b * csvRow.ddot_alpha_ref;
-                c_de    = inv_b * -(csvRow.Kp / safe_Kd) * csvRow.de;
-                c_e     = inv_b * -(csvRow.Ki / safe_Kd) * csvRow.e;
+                c_ref = inv_b * csvRow.ddot_alpha_ref;
+                c_de = inv_b * -(csvRow.Kp / safe_Kd) * csvRow.de;
+                c_e = inv_b * -(csvRow.Ki / safe_Kd) * csvRow.e;
             }
             pushChartData(chartUeqComp, t_label, [c_alpha, c_ypred, c_ref, c_de, c_e]);
 
@@ -1114,14 +1349,17 @@ struct TxPayload { // PC gửi xuống MCU
         }
 
         // === LOGIC GỬI THAM SỐ XUỐNG BOARD BẰNG PROTOCOL NHỊ PHÂN ===
-        document.getElementById('btnSendParams').addEventListener('click', async () => {
+        let isSystemRunning = false;
+
+        async function sendParamsToBoard() {
             if (!port || !port.writable) {
-                alert("Vui lòng kết nối cổng COM trước khi gửi tham số!");
-                return;
+                alert("Vui lòng kết nối cổng COM trước khi gửi lệnh/tham số!");
+                return false;
             }
 
-            // Gói tin TX cấu trúc: 17 floats = 68 bytes payload
+            // Gói tin TX cấu trúc: 18 floats = 72 bytes payload
             const txParams = [
+                isSystemRunning ? 1.0 : 0.0,
                 parseFloat(document.getElementById('p_mode').value) || 0,
                 parseFloat(document.getElementById('p_depth_target').value) || 0,
                 parseFloat(document.getElementById('p_sp_ref').value) || 0,
@@ -1141,8 +1379,8 @@ struct TxPayload { // PC gửi xuống MCU
                 parseFloat(document.getElementById('p_fc_ref').value) || 0
             ];
 
-            const TX_PAYLOAD_SIZE = txParams.length * 4; // 68
-            const txBuffer = new ArrayBuffer(2 + TX_PAYLOAD_SIZE + 1); // 71 bytes
+            const TX_PAYLOAD_SIZE = txParams.length * 4; // 72
+            const txBuffer = new ArrayBuffer(2 + TX_PAYLOAD_SIZE + 1); // 75 bytes
             const txView = new DataView(txBuffer);
             const txUint8 = new Uint8Array(txBuffer);
 
@@ -1150,7 +1388,7 @@ struct TxPayload { // PC gửi xuống MCU
             txUint8[0] = 0x55;
             txUint8[1] = 0xAA;
 
-            // 2. Payload (Chép tuần tự 17 tham số float dạng Little Endian)
+            // 2. Payload (Chép tuần tự 18 tham số float dạng Little Endian)
             let offset = 2;
             txParams.forEach(val => {
                 txView.setFloat32(offset, val, true); // true = little-endian
@@ -1159,42 +1397,108 @@ struct TxPayload { // PC gửi xuống MCU
 
             // 3. Tính Checksum (XOR của toàn bộ payload)
             let checksum = 0;
-            for(let i = 2; i < 2 + TX_PAYLOAD_SIZE; i++) {
+            for (let i = 2; i < 2 + TX_PAYLOAD_SIZE; i++) {
                 checksum ^= txUint8[i];
             }
             txUint8[2 + TX_PAYLOAD_SIZE] = checksum;
-            
+
             try {
                 // Gửi mảng nhị phân trực tiếp
                 writer = port.writable.getWriter();
                 await writer.write(txUint8);
                 writer.releaseLock();
-                
-                // Hiển thị thông báo nhỏ
-                const btn = document.getElementById('btnSendParams');
-                const oldText = btn.innerHTML;
-                btn.innerHTML = "✓ Đã Gửi Cấu Hình Binary";
-                btn.classList.replace('bg-emerald-600', 'bg-green-500');
-                btn.classList.replace('dark:bg-emerald-500', 'dark:bg-green-500');
-                setTimeout(() => {
-                    btn.innerHTML = oldText;
-                    btn.classList.replace('bg-green-500', 'bg-emerald-600');
-                    btn.classList.replace('dark:bg-green-500', 'dark:bg-emerald-500');
-                }, 2000);
-
+                return true;
             } catch (err) {
                 console.error("Lỗi khi gửi:", err);
                 alert("Có lỗi khi gửi dữ liệu xuống Board!");
-                if(writer) writer.releaseLock();
+                if (writer) writer.releaseLock();
+                return false;
+            }
+        }
+
+        // Sự kiện cho nút Bắt đầu (Start) / Dừng (Stop)
+        document.getElementById('btnToggleStart').addEventListener('click', async () => {
+            if (!port || !port.writable) {
+                alert("Vui lòng kết nối cổng COM trước khi Bắt đầu!");
+                return;
+            }
+
+            isSystemRunning = !isSystemRunning;
+            const success = await sendParamsToBoard();
+
+            const btn = document.getElementById('btnToggleStart');
+
+            if (success) {
+                if (isSystemRunning) {
+                    btn.classList.replace('bg-green-600', 'bg-rose-600');
+                    btn.classList.replace('hover:bg-green-700', 'hover:bg-rose-700');
+                    btn.classList.replace('dark:bg-green-500', 'dark:bg-rose-600');
+                    btn.classList.replace('dark:hover:bg-green-600', 'dark:hover:bg-rose-700');
+                    btn.innerHTML = `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M5 5h10v10H5z"/></svg><span id="startText">Dừng (Stop)</span>`;
+                } else {
+                    btn.classList.replace('bg-rose-600', 'bg-green-600');
+                    btn.classList.replace('hover:bg-rose-700', 'hover:bg-green-700');
+                    btn.classList.replace('dark:bg-rose-600', 'dark:bg-green-500');
+                    btn.classList.replace('dark:hover:bg-rose-700', 'dark:hover:bg-green-600');
+                    btn.innerHTML = `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4l12 6-12 6z"/></svg><span id="startText">Bắt Đầu (Start)</span>`;
+                }
+            } else {
+                isSystemRunning = !isSystemRunning; // Hoàn tác trạng thái nếu gửi thất bại
+            }
+        });
+
+        // Sự kiện cho nút Cập Nhật
+        document.getElementById('btnSendParams').addEventListener('click', async () => {
+            const success = await sendParamsToBoard();
+            if (success) {
+                const btn = document.getElementById('btnSendParams');
+                const oldText = btn.innerHTML;
+                btn.innerHTML = "✓ Đã Gửi";
+                btn.classList.replace('bg-blue-600', 'bg-emerald-500');
+                btn.classList.replace('hover:bg-blue-700', 'hover:bg-emerald-600');
+                btn.classList.replace('dark:bg-blue-500', 'dark:bg-emerald-500');
+                btn.classList.replace('dark:hover:bg-blue-600', 'dark:hover:bg-emerald-600');
+                setTimeout(() => {
+                    btn.innerHTML = oldText;
+                    btn.classList.replace('bg-emerald-500', 'bg-blue-600');
+                    btn.classList.replace('hover:bg-emerald-600', 'hover:bg-blue-700');
+                    btn.classList.replace('dark:bg-emerald-500', 'dark:bg-blue-500');
+                    btn.classList.replace('dark:hover:bg-emerald-600', 'dark:hover:bg-blue-600');
+                }, 2000);
             }
         });
 
 
         // === LOGIC XÓA VÀ XUẤT CSV ===
+        const btnToggleRecord = document.getElementById('btnToggleRecord');
+        const recordIndicator = document.getElementById('recordIndicator');
+        const recordText = document.getElementById('recordText');
+
+        btnToggleRecord.addEventListener('click', () => {
+            isRecording = !isRecording;
+            if (isRecording) {
+                recordText.innerText = "Đang Ghi (Stop)";
+                recordIndicator.classList.replace('bg-slate-400', 'bg-red-500');
+                recordIndicator.classList.add('animate-pulse');
+                btnToggleRecord.classList.replace('bg-slate-600', 'bg-slate-800');
+                btnToggleRecord.classList.replace('dark:bg-slate-500', 'dark:bg-slate-700');
+                btnToggleRecord.classList.replace('hover:bg-slate-700', 'hover:bg-slate-900');
+                btnToggleRecord.classList.replace('dark:hover:bg-slate-600', 'dark:hover:bg-slate-800');
+            } else {
+                recordText.innerText = "Bắt đầu Ghi (Record)";
+                recordIndicator.classList.replace('bg-red-500', 'bg-slate-400');
+                recordIndicator.classList.remove('animate-pulse');
+                btnToggleRecord.classList.replace('bg-slate-800', 'bg-slate-600');
+                btnToggleRecord.classList.replace('dark:bg-slate-700', 'dark:bg-slate-500');
+                btnToggleRecord.classList.replace('hover:bg-slate-900', 'hover:bg-slate-700');
+                btnToggleRecord.classList.replace('dark:hover:bg-slate-800', 'dark:hover:bg-slate-600');
+            }
+        });
+
         document.getElementById('btnClearData').addEventListener('click', () => {
             recordedData = [];
             document.getElementById('lblDataCount').innerText = "0";
-            
+
             // Xóa data trên chart
             [chartResponse, chartControl, chartUeq, chartUsw, chartSliding, chartSComp, chartUeqComp, chartUswComp, chartLifting, chartTailboard].forEach(chart => {
                 chart.data.labels = [];
@@ -1209,6 +1513,14 @@ struct TxPayload { // PC gửi xuống MCU
                 settledTime: 0.00,
                 isMeasuring: false
             };
+
+            // Reset lại bộ đếm Serial
+            rxCount = 0;
+            crcErrCount = 0;
+            rxRateCount = 0;
+            document.getElementById('lblRxCount').innerText = "0";
+            document.getElementById('lblCrcErr').innerText = "0";
+            document.getElementById('lblFreq').innerText = "--";
 
             // Đặt lại các số trên Summary Cards
             document.getElementById('val-setpoint').innerText = "0.0";
@@ -1226,8 +1538,8 @@ struct TxPayload { // PC gửi xuống MCU
             Object.keys(maxStats).forEach(key => {
                 const valEl = document.getElementById(`val-${key}`);
                 const maxEl = document.getElementById(`max-${key}`);
-                if(valEl) valEl.innerText = "0.0";
-                if(maxEl) maxEl.innerText = "0.0";
+                if (valEl) valEl.innerText = "0.0";
+                if (maxEl) maxEl.innerText = "0.0";
             });
         });
 
@@ -1246,7 +1558,7 @@ struct TxPayload { // PC gửi xuống MCU
                 "Kp", "Ki", "Kd", "K1", "K2",
                 "K", "tau1", "L", "fc_lift", "fc_tail", "lift_offset", "tail_offset"
             ];
-            
+
             // Tạo header
             let csvContent = outputKeys.join(',') + '\n';
 
@@ -1264,10 +1576,10 @@ struct TxPayload { // PC gửi xuống MCU
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.setAttribute("href", url);
-            
+
             const date = new Date();
-            const fileName = `Control_Data_Binary_${date.getFullYear()}${(date.getMonth()+1).toString().padStart(2,'0')}${date.getDate().toString().padStart(2,'0')}_${date.getHours()}${date.getMinutes()}.csv`;
-            
+            const fileName = `Control_Data_Binary_${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}_${date.getHours()}${date.getMinutes()}.csv`;
+
             link.setAttribute("download", fileName);
             document.body.appendChild(link);
             link.click();
@@ -1276,4 +1588,5 @@ struct TxPayload { // PC gửi xuống MCU
 
     </script>
 </body>
+
 </html>

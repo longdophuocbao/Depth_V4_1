@@ -826,14 +826,16 @@ void setupRoutes()
 // ────────────────────────────────────────────────────────────────────
 struct __attribute__((packed)) SerialTelemetry
 {
-    uint16_t header = 0xAA55;
+    uint8_t head1 = 0x55;
+    uint8_t head2 = 0xAA;
     float values[35]; 
     uint8_t checksum;
 };
 
 struct __attribute__((packed)) SerialCommand
 {
-    uint16_t header;
+    uint8_t head1;
+    uint8_t head2;
     float values[18]; 
     uint8_t checksum;
 };
@@ -895,7 +897,7 @@ void serialTuningTask(void *param)
             {
                 Serial.readBytes(buf, sizeof(SerialCommand));
                 SerialCommand *cmd = (SerialCommand *)buf;
-                if (cmd->header == 0xAA55 && calculateChecksum((uint8_t *)&cmd->values, sizeof(cmd->values)) == cmd->checksum)
+                if (cmd->head1 == 0x55 && cmd->head2 == 0xAA && calculateChecksum((uint8_t *)&cmd->values, sizeof(cmd->values)) == cmd->checksum)
                 {
                     if (xSemaphoreTake(g_mutex, pdMS_TO_TICKS(10)) == pdTRUE)
                     {
@@ -964,6 +966,7 @@ void setup()
         tailboardsensor.setDataRate(RATE_ADS1115_860SPS);
         tailboardsensor.startADCReading(ADS1X15_REG_CONFIG_MUX_SINGLE_0, true);
     }
+    Serial.println("Khởi tạo cảm biến thành công!");
     ESP32PWM::allocateTimer(0);
     ESP32PWM::allocateTimer(1);
     ESP32PWM::allocateTimer(2);
