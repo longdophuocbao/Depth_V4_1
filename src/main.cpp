@@ -295,7 +295,7 @@ volatile float g_ddot_alpha_ref = 0.0f;
 // ────────────────────────────────────────────────────────────────────
 //  THAM SỐ ĐIỀU KHIỂN
 // ────────────────────────────────────────────────────────────────────
-volatile float g_Kp = 1.8f;
+volatile float g_Kp = 1.9f;
 volatile float g_Ki = 1.5f;
 volatile float g_Kd = 1.33f;
 volatile float g_K1 = 3.7f;
@@ -640,7 +640,7 @@ void sensorReadTask(void *param)
     TickType_t xLastWake = xTaskGetTickCount();
     while (true)
     {
-        float lifting_raw = g_lift_offset - readLiftingSensorRaw();
+        float lifting_raw = 266.6f - readLiftingSensorRaw();
         lifting_raw = constrain(lifting_raw, 0, 40);
         float tail_raw = readTailboardSensorRaw() - g_tail_offset;
 
@@ -830,7 +830,7 @@ struct __attribute__((packed)) SerialTelemetry
 {
     uint8_t head1 = 0xAA;
     uint8_t head2 = 0x55;
-    float values[35]; 
+    float values[38]; 
     uint8_t checksum;
 };
 
@@ -862,7 +862,7 @@ void serialTuningTask(void *param)
             v[7] = g_tailboardangle;
             v[8] = g_dot_alpha_actual_raw;
             v[9] = g_depth_target;
-            v[10] = g_sp_raw_val;
+            v[10] = g_setpoint;
             v[11] = g_dot_alpha_ref;
             v[12] = g_ddot_alpha_ref;
             v[13] = g_alpha_manual;
@@ -887,6 +887,9 @@ void serialTuningTask(void *param)
             v[32] = g_lift_offset;
             v[33] = g_tail_offset;
             v[34] = g_e_int;
+            v[35] = g_fc_de;
+            v[36] = g_sp_amp;
+            v[37] = g_sp_freq;
             xSemaphoreGive(g_mutex);
         }
         msg.checksum = calculateChecksum((uint8_t *)&msg.values, sizeof(msg.values));

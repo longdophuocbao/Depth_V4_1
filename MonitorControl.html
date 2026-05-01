@@ -100,8 +100,8 @@
                         <select id="baudRate"
                             class="w-full border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border h-[42px]">
                             <option value="9600">9600</option>
-                            <option value="115200" selected>115200</option>
-                            <option value="250000">250000</option>
+                            <option value="115200">115200</option>
+                            <option value="250000"selected>250000</option>
                             <option value="500000">500000</option>
                         </select>
                     </div>
@@ -205,7 +205,7 @@
                         <div id="div_sp_ref" class="transition-opacity">
                             <label class="block text-xs mb-1 dark:text-slate-300">SP Ref (<i class="font-serif">α</i>
                                 tĩnh)</label>
-                            <input type="number" id="p_sp_ref" value="0.0" step="0.5"
+                            <input type="number" id="p_sp_ref" value="15.0" step="0.5"
                                 class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
 
@@ -246,19 +246,19 @@
                         <div>
                             <label class="block text-xs mb-1 dark:text-slate-300"><i
                                     class="font-serif">K<sub>p</sub></i></label>
-                            <input type="number" id="p_kp" value="1.0" step="0.1"
+                            <input type="number" id="p_kp" value="1.8" step="0.1"
                                 class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                         <div>
                             <label class="block text-xs mb-1 dark:text-slate-300"><i
                                     class="font-serif">K<sub>i</sub></i></label>
-                            <input type="number" id="p_ki" value="0.1" step="0.01"
+                            <input type="number" id="p_ki" value="1.5" step="0.01"
                                 class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                         <div>
                             <label class="block text-xs mb-1 dark:text-slate-300"><i
                                     class="font-serif">K<sub>d</sub></i></label>
-                            <input type="number" id="p_kd" value="0.05" step="0.01"
+                            <input type="number" id="p_kd" value="1.33" step="0.01"
                                 class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                     </div>
@@ -272,13 +272,13 @@
                         <div>
                             <label class="block text-xs mb-1 dark:text-slate-300"><i
                                     class="font-serif">k<sub>1</sub></i> (<i class="font-serif">α</i>)</label>
-                            <input type="number" id="p_k1" value="2.5" step="0.1"
+                            <input type="number" id="p_k1" value="3.5" step="0.1"
                                 class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                         <div>
                             <label class="block text-xs mb-1 dark:text-slate-300"><i
                                     class="font-serif">k<sub>2</sub></i> (<i class="font-serif">β</i>)</label>
-                            <input type="number" id="p_k2" value="1.2" step="0.1"
+                            <input type="number" id="p_k2" value="0.5" step="0.1"
                                 class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                     </div>
@@ -292,13 +292,13 @@
                         <div>
                             <label class="block text-xs mb-1 dark:text-slate-300">Model <i
                                     class="font-serif">K</i></label>
-                            <input type="number" id="p_mk" value="1.0" step="0.1"
+                            <input type="number" id="p_mk" value="35.0" step="0.1"
                                 class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                         <div>
                             <label class="block text-xs mb-1 dark:text-slate-300">Model <i
                                     class="font-serif">T</i></label>
-                            <input type="number" id="p_mt" value="5.0" step="0.1"
+                            <input type="number" id="p_mt" value="1.2" step="0.1"
                                 class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                         <div class="col-span-2">
@@ -331,13 +331,13 @@
                         <div>
                             <label class="block text-xs mb-1 dark:text-slate-300">de Filter (<i
                                     class="font-serif">f<sub>c_de</sub></i>)</label>
-                            <input type="number" id="p_fc_de" value="20" step="0.5"
+                            <input type="number" id="p_fc_de" value="5" step="0.5"
                                 class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                         <div>
                             <label class="block text-xs mb-1 dark:text-slate-300">Refer (<i
                                     class="font-serif">f<sub>c_ref</sub></i>)</label>
-                            <input type="number" id="p_fc_ref" value="5" step="0.5"
+                            <input type="number" id="p_fc_ref" value="15" step="0.5"
                                 class="w-full p-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white rounded text-sm">
                         </div>
                     </div>
@@ -368,11 +368,12 @@
 
     <!-- CỘT BÊN PHẢI: BIỂU ĐỒ -->
     <div class="flex-1 p-6 overflow-y-auto flex flex-col gap-6">
+      
 
         <!-- Chart 1: Setpoint vs Output vs Predicted -->
         <div
             class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md h-80 flex-shrink-0 transition-colors duration-300">
-            <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Đáp Ứng Hệ Thống (Setpoint vs Thực
+            <h3 id="chartResponseTitle" class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Đáp Ứng Hệ Thống (Setpoint vs Thực
                 Tế <i class="font-serif">y</i> vs Dự Đoán <i class="font-serif">y<sub>p</sub></i>)</h3>
             <div class="relative h-[90%] w-full">
                 <canvas id="chartResponse"></canvas>
@@ -384,7 +385,7 @@
             <!-- Setpoint -->
             <div
                 class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
-                <span
+                <span id="lbl-setpoint-tag"
                     class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Setpoint
                     (<i class="font-serif text-xs">sp_ref</i>)</span>
                 <span id="val-setpoint"
@@ -393,7 +394,7 @@
             <!-- Current Value -->
             <div
                 class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
-                <span
+                <span id="lbl-current-tag"
                     class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Current
                     Value (<i class="font-serif text-xs">est_depth</i>)</span>
                 <span id="val-current"
@@ -402,7 +403,7 @@
             <!-- Error -->
             <div
                 class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
-                <span
+                <span id="lbl-error-tag"
                     class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Error
                     (<i class="font-serif text-xs">e</i>)</span>
                 <span id="val-error" class="text-3xl font-bold text-rose-500 dark:text-[#fb7185] font-mono">-0.0</span>
@@ -416,6 +417,37 @@
                 <span id="val-time"
                     class="text-xl sm:text-2xl font-bold text-green-500 font-mono truncate w-full text-center">0.00
                     s</span>
+            </div>
+        </div>
+
+        <!-- Khối Đồ thị & Thẻ Alpha (Chỉ hiện ở Auto Mode) -->
+        <div id="container-chart-alpha" class="hidden flex flex-col gap-6 flex-shrink-0 transition-opacity duration-300">
+            <!-- Chart 1.5: Alpha Response -->
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md h-80 transition-colors duration-300">
+                <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Đáp Ứng Góc Alpha (Alpha Ref vs Thực Tế vs Dự Đoán)</h3>
+                <div class="relative h-[90%] w-full">
+                    <canvas id="chartResponseAlpha"></canvas>
+                </div>
+            </div>
+
+            <!-- Thẻ giá trị Alpha -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
+                    <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Alpha Ref (<i class="font-serif text-xs">sp_ref</i>)</span>
+                    <span id="val-alpha-setpoint" class="text-3xl font-bold text-blue-500 dark:text-[#3b82f6] font-mono">0.0</span>
+                </div>
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
+                    <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Current Alpha (<i class="font-serif text-xs">lift_filt</i>)</span>
+                    <span id="val-alpha-current" class="text-3xl font-bold text-emerald-500 dark:text-[#22c55e] font-mono">0.0</span>
+                </div>
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
+                    <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Alpha Error</span>
+                    <span id="val-alpha-error" class="text-3xl font-bold text-rose-500 dark:text-[#fb7185] font-mono">-0.0</span>
+                </div>
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
+                    <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Pred Alpha (<i class="font-serif text-xs">y_pred</i>)</span>
+                    <span id="val-alpha-pred" class="text-3xl font-bold text-purple-500 dark:text-[#a855f7] font-mono">0.0</span>
+                </div>
             </div>
         </div>
 
@@ -695,7 +727,7 @@
             Chart.defaults.scale.grid.color = gridColor;
 
             // Update tất cả các chart hiện có
-            const allCharts = [chartResponse, chartControl, chartUeq, chartUsw, chartSliding, chartSComp, chartUeqComp, chartUswComp, chartLifting, chartTailboard];
+            const allCharts = [chartResponse, chartResponseAlpha, chartControl, chartUeq, chartUsw, chartSliding, chartSComp, chartUeqComp, chartUswComp, chartLifting, chartTailboard];
             allCharts.forEach(chart => {
                 if (chart) {
                     chart.options.scales.x.ticks.color = textColor;
@@ -773,6 +805,14 @@
                 div_signal_params.classList.remove('grid');
                 toggleInput(div_signal_params, [p_sp_amp, p_sp_freq], false);
             }
+
+            // Ẩn/hiện đồ thị Alpha tùy theo chế độ (0 = Auto)
+            const containerChartAlpha = document.getElementById('container-chart-alpha');
+            if (mode === 0) {
+                containerChartAlpha.classList.remove('hidden');
+            } else {
+                containerChartAlpha.classList.add('hidden');
+            }
         });
 
         // Khởi tạo trạng thái ban đầu của Mode
@@ -803,9 +843,9 @@
         }, 1000);
 
         // CẤU TRÚC GÓI TIN NHẬN (RX)
-        // 35 tham số kiểu Float (4 bytes/số) = 140 bytes
-        const RX_PAYLOAD_SIZE = 35 * 4;
-        const RX_PACKET_SIZE = 2 + RX_PAYLOAD_SIZE + 1; // Header(2) + Payload(140) + Checksum(1) = 143 bytes
+        // 38 tham số kiểu Float (4 bytes/số) = 152 bytes
+        const RX_PAYLOAD_SIZE = 38 * 4;
+        const RX_PACKET_SIZE = 2 + RX_PAYLOAD_SIZE + 1; // Header(2) + Payload(152) + Checksum(1) = 155 bytes
         let receiveBuffer = new Uint8Array(0);
 
         // Map keys theo đúng thứ tự trong struct C++ của MCU
@@ -814,7 +854,8 @@
             "lift_raw", "lift_filt", "tail_raw", "tail_filt", "dot_alpha_raw",
             "depth_target", "sp_ref", "dot_alpha_ref", "ddot_alpha_ref", "alpha_manual", "omega_ref",
             "e", "de", "s", "u", "u_eq", "u_sw", "u_sw_i",
-            "Kp", "Ki", "Kd", "K1", "K2", "K", "tau1", "L", "fc_lift", "fc_tail", "lift_offset", "tail_offset", "e_int"
+            "Kp", "Ki", "Kd", "K1", "K2", "K", "tau1", "L", "fc_lift", "fc_tail", "lift_offset", "tail_offset", "e_int",
+            "fc_de", "sp_amp", "sp_freq"
         ];
 
         // Biến lưu trữ giá trị Max của các thành phần
@@ -831,6 +872,9 @@
             settledTime: 0.00,
             isMeasuring: false
         };
+
+        let lastChartMode = -1; // Theo dõi sự thay đổi chế độ để cập nhật nhãn
+        let needsSync = false;  // Cờ đồng bộ tham số khi mới kết nối
 
         // Hàm cập nhật thẻ thành phần
         function updateComponentCard(idBase, val) {
@@ -901,6 +945,20 @@
                 ]
             },
             options: { ...commonOptions, scales: { ...commonOptions.scales, y: { title: { display: true, text: 'Giá trị' } } } }
+        });
+
+        const ctxResponseAlpha = document.getElementById('chartResponseAlpha').getContext('2d');
+        const chartResponseAlpha = new Chart(ctxResponseAlpha, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [
+                    { label: 'Alpha Ref (sp_ref)', borderColor: '#94a3b8', borderDash: [5, 5], data: [] },
+                    { label: 'Thực tế (lift_filt)', borderColor: '#ef4444', data: [] },
+                    { label: 'Dự đoán (y_pred)', borderColor: '#3b82f6', borderDash: [2, 2], data: [] }
+                ]
+            },
+            options: { ...commonOptions, scales: { ...commonOptions.scales, y: { title: { display: true, text: 'Góc (deg)' } } } }
         });
 
         const ctxControl = document.getElementById('chartControl').getContext('2d');
@@ -1035,6 +1093,7 @@
                     await port.open({ baudRate: baudRate });
 
                     isConnected = true;
+                    needsSync = true; // Bật cờ đồng bộ khi mới kết nối
 
                     // Cập nhật giao diện nút sang trạng thái Ngắt kết nối (Màu đỏ)
                     btnToggleConnect.innerText = "Disconnect";
@@ -1169,6 +1228,30 @@
         // Xử lý dữ liệu đã parse
         let updateCounter = 0;
         function processParsedData(data) {
+             // Đồng bộ tham số từ Board lên UI khi mới kết nối
+            if (needsSync) {
+                document.getElementById('p_mode').value = Math.round(data.mode);
+                document.getElementById('p_depth_target').value = data.depth_target.toFixed(1);
+                document.getElementById('p_sp_ref').value = data.alpha_manual.toFixed(1);
+                document.getElementById('p_sp_amp').value = data.sp_amp.toFixed(1);
+                document.getElementById('p_sp_freq').value = data.sp_freq.toFixed(2);
+                document.getElementById('p_kp').value = data.Kp.toFixed(2);
+                document.getElementById('p_ki').value = data.Ki.toFixed(2);
+                document.getElementById('p_kd').value = data.Kd.toFixed(2);
+                document.getElementById('p_k1').value = data.K1.toFixed(2);
+                document.getElementById('p_k2').value = data.K2.toFixed(2);
+                document.getElementById('p_mk').value = data.K.toFixed(2);
+                document.getElementById('p_mt').value = data.tau1.toFixed(3);
+                document.getElementById('p_ml').value = Math.round(data.L * 1000);
+                document.getElementById('p_fc_lift').value = data.fc_lift.toFixed(1);
+                document.getElementById('p_fc_tail').value = data.fc_tail.toFixed(1);
+                document.getElementById('p_fc_de').value = data.fc_de.toFixed(1);
+                document.getElementById('p_fc_ref').value = data.omega_ref.toFixed(1);
+                // Cập nhật lại giao diện (ẩn hiện các ô nhập liệu theo Mode)
+                p_mode.dispatchEvent(new Event('change'));
+                needsSync = false;
+                console.log("Parameters synchronized from Board!");
+            }
             // Lấy thời gian thực (Real-time) từ hệ thống máy tính theo định dạng HH:mm:ss:SSS
             const now = new Date();
             const realTimeStr = String(now.getHours()).padStart(2, '0') + ":" +
@@ -1178,7 +1261,6 @@
 
             // CHUẨN HOÁ DỮ LIỆU ĐỂ LƯU CSV
             const csvRow = {
-                // ... (giữ nguyên các trường dữ liệu)
                 "real_time": realTimeStr,
                 "time_s": data.time_s ?? 0,
                 "y_pred": data.y_pred ?? 0,
@@ -1228,18 +1310,58 @@
             // Tên nhãn cho trục X của Chart
             const t_label = realTimeStr;
             const mcuTime = (data.time_s ?? 0);
+            const mode = Math.round(csvRow.mode);
+
+            // --- Cập nhật labels và titles nếu đổi Mode ---
+            if (mode !== lastChartMode) {
+                const isAuto = (mode === 0);
+                // Cập nhật legend chart
+                chartResponse.data.datasets[0].label = isAuto ? 'Depth Target (mm)' : 'Alpha Ref (deg)';
+                chartResponse.data.datasets[1].label = isAuto ? 'Est. Depth (mm)' : 'Actual Alpha (deg)';
+                chartResponse.data.datasets[2].label = isAuto ? 'Pred. Depth (mm)' : 'Pred. Alpha (deg)';
+                chartResponse.update('none');
+
+                // Cập nhật tiêu đề đồ thị
+                document.getElementById('chartResponseTitle').innerHTML = isAuto ?
+                    `Đáp Ứng Độ Sâu (Depth Target vs Thực Tế <i class="font-serif">y</i> vs Dự Đoán <i class="font-serif">y<sub>p</sub></i>)` :
+                    `Đáp Ứng Hệ Thống (Setpoint vs Thực Tế <i class="font-serif">y</i> vs Dự Đoán <i class="font-serif">y<sub>p</sub></i>)`;
+
+                // Cập nhật nhãn Summary Cards chính
+                document.getElementById('lbl-setpoint-tag').innerHTML = isAuto ?
+                    `Depth Target (<i class="font-serif text-xs">mm</i>)` :
+                    `Alpha Ref (<i class="font-serif text-xs">deg</i>)`;
+                document.getElementById('lbl-current-tag').innerHTML = isAuto ?
+                    `Current Depth (<i class="font-serif text-xs">mm</i>)` :
+                    `Current Alpha (<i class="font-serif text-xs">deg</i>)`;
+                document.getElementById('lbl-error-tag').innerHTML = isAuto ?
+                    `Depth Error (<i class="font-serif text-xs">mm</i>)` :
+                    `Alpha Error (<i class="font-serif text-xs">deg</i>)`;
+
+                lastChartMode = mode;
+            }
+
+            // --- CHỌN TÍN HIỆU ĐỂ HIỂN THỊ TRÊN THẺ CHÍNH ---
+            let displaySP, displayActual, displayPred;
+            if (mode === 0) { // Auto
+                displaySP = csvRow.depth_target;
+                displayActual = csvRow.est_depth;
+                // Predicted depth calculation (approx formula: alpha*1.1 + tail*2.0)
+                displayPred = csvRow.y_pred * 1.1 + csvRow.tail_filt * 2.0;
+            } else { // Manual / Step / Osc
+                displaySP = csvRow.sp_ref;      // Filtered alpha_ref
+                displayActual = csvRow.lift_filt; // Actual alpha
+                displayPred = csvRow.y_pred;     // Predicted alpha
+            }
 
             // --- TÍNH TOÁN THỜI GIAN ĐÁP ỨNG ---
-            const sp = csvRow.sp_ref;
-            const y = csvRow.est_depth;
-            if (responseTimeObj.lastSp === null) responseTimeObj.lastSp = sp;
-            if (Math.abs(sp - responseTimeObj.lastSp) > 0.5) {
+            if (responseTimeObj.lastSp === null) responseTimeObj.lastSp = displaySP;
+            if (Math.abs(displaySP - responseTimeObj.lastSp) > 0.5) {
                 responseTimeObj.startTime = mcuTime;
                 responseTimeObj.isMeasuring = true;
-                responseTimeObj.lastSp = sp;
+                responseTimeObj.lastSp = displaySP;
             }
-            const tolerance = Math.max(0.5, Math.abs(sp) * 0.02);
-            const currentError = Math.abs(sp - y);
+            const tolerance = Math.max(0.5, Math.abs(displaySP) * 0.02);
+            const currentError = Math.abs(displaySP - displayActual);
             if (responseTimeObj.isMeasuring) {
                 responseTimeObj.settledTime = mcuTime - responseTimeObj.startTime;
                 if (currentError <= tolerance) responseTimeObj.isMeasuring = false;
@@ -1249,20 +1371,29 @@
             }
 
             // --- Cập nhật Thẻ thông số tóm tắt ---
-            document.getElementById('val-setpoint').innerText = (csvRow.sp_ref).toFixed(1);
-            document.getElementById('val-current').innerText = (csvRow.est_depth).toFixed(1);
-            document.getElementById('val-error').innerText = (csvRow.e).toFixed(2);
+            document.getElementById('val-setpoint').innerText = displaySP.toFixed(1);
+            document.getElementById('val-current').innerText = displayActual.toFixed(1);
+            // Hiển thị sai số Actual - Setpoint
+            document.getElementById('val-error').innerText = (displayActual - displaySP).toFixed(2);
+
             const valTimeEl = document.getElementById('val-time');
             valTimeEl.innerText = responseTimeObj.settledTime.toFixed(2) + (responseTimeObj.isMeasuring ? ' s...' : ' s');
             valTimeEl.className = responseTimeObj.isMeasuring ? "text-xl sm:text-2xl font-bold text-amber-500 font-mono truncate w-full text-center" : "text-xl sm:text-2xl font-bold text-green-500 font-mono truncate w-full text-center";
 
+            // --- Cập nhật thẻ Alpha (Chỉ dành cho Auto Mode) ---
+            document.getElementById('val-alpha-setpoint').innerText = csvRow.sp_ref.toFixed(1);
+            document.getElementById('val-alpha-current').innerText = csvRow.lift_filt.toFixed(1);
+            document.getElementById('val-alpha-error').innerText = (csvRow.lift_filt - csvRow.sp_ref).toFixed(2);
+            document.getElementById('val-alpha-pred').innerText = csvRow.y_pred.toFixed(1);
+
             // --- Cập nhật Dữ liệu Biểu đồ (Chưa Render) ---
-            pushChartData(chartResponse, t_label, [csvRow.sp_ref, csvRow.est_depth, csvRow.y_pred]);
+            pushChartData(chartResponse, t_label, [displaySP, displayActual, displayPred]);
+            pushChartData(chartResponseAlpha, t_label, [csvRow.sp_ref, csvRow.lift_filt, csvRow.y_pred]);
             pushChartData(chartControl, t_label, [csvRow.u]);
             pushChartData(chartUeq, t_label, [csvRow.u_eq]);
             pushChartData(chartUsw, t_label, [csvRow.u_sw]);
             pushChartData(chartSliding, t_label, [csvRow.s]);
-            
+
             const p_comp = csvRow.Kp * csvRow.e, i_comp = csvRow.Ki * csvRow.e_int, d_comp = csvRow.Kd * csvRow.de;
             pushChartData(chartSComp, t_label, [p_comp, i_comp, d_comp]);
             updateComponentCard('s-p', p_comp); updateComponentCard('s-i', i_comp); updateComponentCard('s-d', d_comp);
@@ -1270,7 +1401,7 @@
             const safe_tau1 = Math.abs(csvRow.tau1) < 1e-4 ? 1e-4 : csvRow.tau1;
             const a1 = 1.0 / safe_tau1, b = (-csvRow.K) / safe_tau1;
             const safe_Kd = Math.abs(csvRow.Kd) < 1e-4 ? (csvRow.Kd >= 0 ? 1e-4 : -1e-4) : csvRow.Kd;
-            
+
             let c_alpha = 0, c_ypred = 0, c_ref = 0, c_de = 0, c_e = 0;
             if (Math.abs(b) > 1e-6) {
                 const inv_b = 1.0 / b;
@@ -1299,6 +1430,7 @@
             updateCounter++;
             if (updateCounter >= 10) {
                 chartResponse.update('none');
+                chartResponseAlpha.update('none');
                 chartControl.update('none');
                 chartUeq.update('none');
                 chartUsw.update('none');
@@ -1464,7 +1596,7 @@
             document.getElementById('lblDataCount').innerText = "0";
 
             // Xóa data trên chart
-            [chartResponse, chartControl, chartUeq, chartUsw, chartSliding, chartSComp, chartUeqComp, chartUswComp, chartLifting, chartTailboard].forEach(chart => {
+            [chartResponse, chartResponseAlpha, chartControl, chartUeq, chartUsw, chartSliding, chartSComp, chartUeqComp, chartUswComp, chartLifting, chartTailboard].forEach(chart => {
                 chart.data.labels = [];
                 chart.data.datasets.forEach(ds => ds.data = []);
                 chart.update();
@@ -1492,6 +1624,11 @@
             document.getElementById('val-error').innerText = "0.00";
             document.getElementById('val-time').innerText = "0.00 s";
             document.getElementById('val-time').className = "text-xl sm:text-2xl font-bold text-green-500 font-mono truncate w-full text-center";
+
+            document.getElementById('val-alpha-setpoint').innerText = "0.0";
+            document.getElementById('val-alpha-current').innerText = "0.0";
+            document.getElementById('val-alpha-error').innerText = "-0.0";
+            document.getElementById('val-alpha-pred').innerText = "0.0";
 
             // Đặt lại các Component Cards & Max Stats
             maxStats = {
