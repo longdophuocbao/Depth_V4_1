@@ -368,85 +368,71 @@
 
     <!-- CỘT BÊN PHẢI: BIỂU ĐỒ -->
     <div class="flex-1 p-6 overflow-y-auto flex flex-col gap-6">
-      
 
-        <!-- Chart 1: Setpoint vs Output vs Predicted -->
-        <div
-            class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md h-80 flex-shrink-0 transition-colors duration-300">
-            <h3 id="chartResponseTitle" class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Đáp Ứng Hệ Thống (Setpoint vs Thực
-                Tế <i class="font-serif">y</i> vs Dự Đoán <i class="font-serif">y<sub>p</sub></i>)</h3>
-            <div class="relative h-[90%] w-full">
-                <canvas id="chartResponse"></canvas>
+        <!-- CHUYÊN MỤC 1: ĐÁP ỨNG ĐỘ SÂU (CHỈ HIỂN THỊ Ở CHẾ ĐỘ AUTO) -->
+        <div id="depth-section" class="flex flex-col gap-6 flex-shrink-0 transition-opacity duration-300">
+           
+
+            <!-- Chart Độ Sâu -->
+            <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md h-80 transition-colors duration-300">
+                <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Đáp Ứng Độ Sâu (Target vs Est Depth vs Pred Depth)</h3>
+                <div class="relative h-[90%] w-full">
+                    <canvas id="chartDepth"></canvas>
+                </div>
+            </div>
+
+             <!-- Thẻ giá trị Độ Sâu (Nằm trên biểu đồ) -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
+                    <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Depth Target (<i class="font-serif text-xs">mm</i>)</span>
+                    <span id="val-depth-setpoint" class="text-3xl font-bold text-blue-500 dark:text-[#3b82f6] font-mono">0.0</span>
+                </div>
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
+                    <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Est. Depth (<i class="font-serif text-xs">mm</i>)</span>
+                    <span id="val-depth-current" class="text-3xl font-bold text-emerald-500 dark:text-[#22c55e] font-mono">0.0</span>
+                </div>
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
+                    <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Depth Error (<i class="font-serif text-xs">mm</i>)</span>
+                    <span id="val-depth-error" class="text-3xl font-bold text-rose-500 dark:text-[#fb7185] font-mono">-0.0</span>
+                </div>
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
+                    <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Response Time</span>
+                    <span id="val-depth-time" class="text-xl sm:text-2xl font-bold text-green-500 font-mono truncate w-full text-center">0.00 s</span>
+                </div>
             </div>
         </div>
 
-        <!-- ===== THẺ GIÁ TRỊ TỔNG QUÁT (SUMMARY CARDS) ===== -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 flex-shrink-0">
-            <!-- Setpoint -->
-            <div
-                class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
-                <span id="lbl-setpoint-tag"
-                    class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Setpoint
-                    (<i class="font-serif text-xs">sp_ref</i>)</span>
-                <span id="val-setpoint"
-                    class="text-3xl font-bold text-blue-500 dark:text-[#3b82f6] font-mono">0.0</span>
-            </div>
-            <!-- Current Value -->
-            <div
-                class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
-                <span id="lbl-current-tag"
-                    class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Current
-                    Value (<i class="font-serif text-xs">est_depth</i>)</span>
-                <span id="val-current"
-                    class="text-3xl font-bold text-emerald-500 dark:text-[#22c55e] font-mono">0.0</span>
-            </div>
-            <!-- Error -->
-            <div
-                class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
-                <span id="lbl-error-tag"
-                    class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Error
-                    (<i class="font-serif text-xs">e</i>)</span>
-                <span id="val-error" class="text-3xl font-bold text-rose-500 dark:text-[#fb7185] font-mono">-0.0</span>
-            </div>
-            <!-- Response Time -->
-            <div
-                class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
-                <span
-                    class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Response
-                    Time</span>
-                <span id="val-time"
-                    class="text-xl sm:text-2xl font-bold text-green-500 font-mono truncate w-full text-center">0.00
-                    s</span>
-            </div>
-        </div>
-
-        <!-- Khối Đồ thị & Thẻ Alpha (Chỉ hiện ở Auto Mode) -->
-        <div id="container-chart-alpha" class="hidden flex flex-col gap-6 flex-shrink-0 transition-opacity duration-300">
-            <!-- Chart 1.5: Alpha Response -->
+        <!-- CHUYÊN MỤC 2: ĐÁP ỨNG GÓC ALPHA (LUÔN HIỂN THỊ) -->
+        <div id="alpha-section" class="flex flex-col gap-6 flex-shrink-0 transition-opacity duration-300">
+            <!-- Chart Alpha -->
             <div class="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-md h-80 transition-colors duration-300">
                 <h3 class="text-center font-bold text-slate-700 dark:text-slate-200 mb-2">Đáp Ứng Góc Alpha (Alpha Ref vs Thực Tế vs Dự Đoán)</h3>
                 <div class="relative h-[90%] w-full">
-                    <canvas id="chartResponseAlpha"></canvas>
+                    <canvas id="chartAlpha"></canvas>
                 </div>
             </div>
 
-            <!-- Thẻ giá trị Alpha -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Thẻ giá trị Alpha (Nằm dưới biểu đồ) -->
+            <div class="grid grid-cols-2 lg:grid-cols-5 gap-4">
                 <div class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
-                    <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Alpha Ref (<i class="font-serif text-xs">sp_ref</i>)</span>
-                    <span id="val-alpha-setpoint" class="text-3xl font-bold text-blue-500 dark:text-[#3b82f6] font-mono">0.0</span>
+                    <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Alpha Ref (<i class="font-serif text-xs">deg</i>)</span>
+                    <span id="val-alpha-setpoint" class="text-2xl font-bold text-blue-500 dark:text-[#3b82f6] font-mono">0.0</span>
                 </div>
                 <div class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
-                    <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Current Alpha (<i class="font-serif text-xs">lift_filt</i>)</span>
-                    <span id="val-alpha-current" class="text-3xl font-bold text-emerald-500 dark:text-[#22c55e] font-mono">0.0</span>
+                    <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Actual Alpha (<i class="font-serif text-xs">deg</i>)</span>
+                    <span id="val-alpha-current" class="text-2xl font-bold text-emerald-500 dark:text-[#22c55e] font-mono">0.0</span>
                 </div>
                 <div class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
                     <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Alpha Error</span>
-                    <span id="val-alpha-error" class="text-3xl font-bold text-rose-500 dark:text-[#fb7185] font-mono">-0.0</span>
+                    <span id="val-alpha-error" class="text-2xl font-bold text-rose-500 dark:text-[#fb7185] font-mono">-0.00</span>
                 </div>
                 <div class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
-                    <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Pred Alpha (<i class="font-serif text-xs">y_pred</i>)</span>
-                    <span id="val-alpha-pred" class="text-3xl font-bold text-purple-500 dark:text-[#a855f7] font-mono">0.0</span>
+                    <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Pred Alpha (<i class="font-serif text-xs">deg</i>)</span>
+                    <span id="val-alpha-pred" class="text-2xl font-bold text-purple-500 dark:text-[#a855f7] font-mono">0.0</span>
+                </div>
+                <div class="bg-white dark:bg-slate-800 rounded-xl p-5 flex flex-col items-center justify-center shadow-md border border-slate-100 dark:border-slate-700/50 transition-colors duration-300">
+                    <span class="text-slate-500 dark:text-slate-400 text-[10px] font-bold tracking-widest uppercase mb-2">Response Time</span>
+                    <span id="val-alpha-time" class="text-xl sm:text-2xl font-bold text-green-500 font-mono truncate w-full text-center">0.00 s</span>
                 </div>
             </div>
         </div>
@@ -727,7 +713,7 @@
             Chart.defaults.scale.grid.color = gridColor;
 
             // Update tất cả các chart hiện có
-            const allCharts = [chartResponse, chartResponseAlpha, chartControl, chartUeq, chartUsw, chartSliding, chartSComp, chartUeqComp, chartUswComp, chartLifting, chartTailboard];
+            const allCharts = [chartDepth, chartAlpha, chartControl, chartUeq, chartUsw, chartSliding, chartSComp, chartUeqComp, chartUswComp, chartLifting, chartTailboard];
             allCharts.forEach(chart => {
                 if (chart) {
                     chart.options.scales.x.ticks.color = textColor;
@@ -806,12 +792,12 @@
                 toggleInput(div_signal_params, [p_sp_amp, p_sp_freq], false);
             }
 
-            // Ẩn/hiện đồ thị Alpha tùy theo chế độ (0 = Auto)
-            const containerChartAlpha = document.getElementById('container-chart-alpha');
+            // Ẩn/hiện phân mục Độ Sâu tùy theo chế độ (0 = Auto)
+            const depthSection = document.getElementById('depth-section');
             if (mode === 0) {
-                containerChartAlpha.classList.remove('hidden');
+                depthSection.classList.remove('hidden');
             } else {
-                containerChartAlpha.classList.add('hidden');
+                depthSection.classList.add('hidden');
             }
         });
 
@@ -865,15 +851,13 @@
             'usw-1': 0, 'usw-2': 0
         };
 
-        // Biến để lưu trữ logic thời gian đáp ứng (Response Time)
-        let responseTimeObj = {
-            lastSp: null,
-            startTime: 0,
-            settledTime: 0.00,
-            isMeasuring: false
-        };
+        // Biến để lưu trữ logic thời gian đáp ứng (Response Time) độc lập cho 2 vòng lặp
+        function createResponseTimeTracker() {
+            return { lastSp: null, startTime: 0, settledTime: 0.00, isMeasuring: false };
+        }
+        let depthRt = createResponseTimeTracker();
+        let alphaRt = createResponseTimeTracker();
 
-        let lastChartMode = -1; // Theo dõi sự thay đổi chế độ để cập nhật nhãn
         let needsSync = false;  // Cờ đồng bộ tham số khi mới kết nối
 
         // Hàm cập nhật thẻ thành phần
@@ -933,29 +917,29 @@
         };
 
         // Khởi tạo các biểu đồ
-        const ctxResponse = document.getElementById('chartResponse').getContext('2d');
-        const chartResponse = new Chart(ctxResponse, {
+        const ctxDepth = document.getElementById('chartDepth').getContext('2d');
+        const chartDepth = new Chart(ctxDepth, {
             type: 'line',
             data: {
                 labels: [],
                 datasets: [
-                    { label: 'Setpoint (SP)', borderColor: '#94a3b8', borderDash: [5, 5], data: [] },
-                    { label: 'Thực tế (y)', borderColor: '#ef4444', data: [] },
-                    { label: 'Dự đoán (y\u209A)', borderColor: '#3b82f6', borderDash: [2, 2], data: [] }
+                    { label: 'Depth Target (mm)', borderColor: '#94a3b8', borderDash: [5, 5], data: [] },
+                    { label: 'Est. Depth (mm)', borderColor: '#ef4444', data: [] },
+                    { label: 'Pred. Depth (mm)', borderColor: '#3b82f6', borderDash: [2, 2], data: [] }
                 ]
             },
             options: { ...commonOptions, scales: { ...commonOptions.scales, y: { title: { display: true, text: 'Giá trị' } } } }
         });
 
-        const ctxResponseAlpha = document.getElementById('chartResponseAlpha').getContext('2d');
-        const chartResponseAlpha = new Chart(ctxResponseAlpha, {
+        const ctxAlpha = document.getElementById('chartAlpha').getContext('2d');
+        const chartAlpha = new Chart(ctxAlpha, {
             type: 'line',
             data: {
                 labels: [],
                 datasets: [
-                    { label: 'Alpha Ref (sp_ref)', borderColor: '#94a3b8', borderDash: [5, 5], data: [] },
-                    { label: 'Thực tế (lift_filt)', borderColor: '#ef4444', data: [] },
-                    { label: 'Dự đoán (y_pred)', borderColor: '#3b82f6', borderDash: [2, 2], data: [] }
+                    { label: 'Alpha Ref (deg)', borderColor: '#94a3b8', borderDash: [5, 5], data: [] },
+                    { label: 'Actual Alpha (deg)', borderColor: '#ef4444', data: [] },
+                    { label: 'Pred. Alpha (deg)', borderColor: '#3b82f6', borderDash: [2, 2], data: [] }
                 ]
             },
             options: { ...commonOptions, scales: { ...commonOptions.scales, y: { title: { display: true, text: 'Góc (deg)' } } } }
@@ -1225,6 +1209,32 @@
             processParsedData(data);
         }
 
+        // Utility cập nhật response time
+        function updateResponseTime(rtObj, sp, actual, mcuTime) {
+            if (rtObj.lastSp === null) rtObj.lastSp = sp;
+            if (Math.abs(sp - rtObj.lastSp) > 0.5) {
+                rtObj.startTime = mcuTime;
+                rtObj.isMeasuring = true;
+                rtObj.lastSp = sp;
+            }
+            const tolerance = Math.max(0.5, Math.abs(sp) * 0.02);
+            const currentError = Math.abs(sp - actual);
+            if (rtObj.isMeasuring) {
+                rtObj.settledTime = mcuTime - rtObj.startTime;
+                if (currentError <= tolerance) rtObj.isMeasuring = false;
+            } else if (currentError > tolerance * 2) {
+                rtObj.startTime = mcuTime;
+                rtObj.isMeasuring = true;
+            }
+        }
+
+        // Utility đổi giao diện thẻ thời gian
+        function updateTimeUI(elementId, rtObj) {
+            const el = document.getElementById(elementId);
+            el.innerText = rtObj.settledTime.toFixed(2) + (rtObj.isMeasuring ? ' s...' : ' s');
+            el.className = rtObj.isMeasuring ? "text-xl sm:text-2xl font-bold text-amber-500 font-mono truncate w-full text-center" : "text-xl sm:text-2xl font-bold text-green-500 font-mono truncate w-full text-center";
+        }
+
         // Xử lý dữ liệu đã parse
         let updateCounter = 0;
         function processParsedData(data) {
@@ -1310,85 +1320,29 @@
             // Tên nhãn cho trục X của Chart
             const t_label = realTimeStr;
             const mcuTime = (data.time_s ?? 0);
-            const mode = Math.round(csvRow.mode);
-
-            // --- Cập nhật labels và titles nếu đổi Mode ---
-            if (mode !== lastChartMode) {
-                const isAuto = (mode === 0);
-                // Cập nhật legend chart
-                chartResponse.data.datasets[0].label = isAuto ? 'Depth Target (mm)' : 'Alpha Ref (deg)';
-                chartResponse.data.datasets[1].label = isAuto ? 'Est. Depth (mm)' : 'Actual Alpha (deg)';
-                chartResponse.data.datasets[2].label = isAuto ? 'Pred. Depth (mm)' : 'Pred. Alpha (deg)';
-                chartResponse.update('none');
-
-                // Cập nhật tiêu đề đồ thị
-                document.getElementById('chartResponseTitle').innerHTML = isAuto ?
-                    `Đáp Ứng Độ Sâu (Depth Target vs Thực Tế <i class="font-serif">y</i> vs Dự Đoán <i class="font-serif">y<sub>p</sub></i>)` :
-                    `Đáp Ứng Hệ Thống (Setpoint vs Thực Tế <i class="font-serif">y</i> vs Dự Đoán <i class="font-serif">y<sub>p</sub></i>)`;
-
-                // Cập nhật nhãn Summary Cards chính
-                document.getElementById('lbl-setpoint-tag').innerHTML = isAuto ?
-                    `Depth Target (<i class="font-serif text-xs">mm</i>)` :
-                    `Alpha Ref (<i class="font-serif text-xs">deg</i>)`;
-                document.getElementById('lbl-current-tag').innerHTML = isAuto ?
-                    `Current Depth (<i class="font-serif text-xs">mm</i>)` :
-                    `Current Alpha (<i class="font-serif text-xs">deg</i>)`;
-                document.getElementById('lbl-error-tag').innerHTML = isAuto ?
-                    `Depth Error (<i class="font-serif text-xs">mm</i>)` :
-                    `Alpha Error (<i class="font-serif text-xs">deg</i>)`;
-
-                lastChartMode = mode;
-            }
-
-            // --- CHỌN TÍN HIỆU ĐỂ HIỂN THỊ TRÊN THẺ CHÍNH ---
-            let displaySP, displayActual, displayPred;
-            if (mode === 0) { // Auto
-                displaySP = csvRow.depth_target;
-                displayActual = csvRow.est_depth;
-                // Predicted depth calculation (approx formula: alpha*1.1 + tail*2.0)
-                displayPred = csvRow.y_pred * 1.1 + csvRow.tail_filt * 2.0;
-            } else { // Manual / Step / Osc
-                displaySP = csvRow.sp_ref;      // Filtered alpha_ref
-                displayActual = csvRow.lift_filt; // Actual alpha
-                displayPred = csvRow.y_pred;     // Predicted alpha
-            }
-
+            
             // --- TÍNH TOÁN THỜI GIAN ĐÁP ỨNG ---
-            if (responseTimeObj.lastSp === null) responseTimeObj.lastSp = displaySP;
-            if (Math.abs(displaySP - responseTimeObj.lastSp) > 0.5) {
-                responseTimeObj.startTime = mcuTime;
-                responseTimeObj.isMeasuring = true;
-                responseTimeObj.lastSp = displaySP;
-            }
-            const tolerance = Math.max(0.5, Math.abs(displaySP) * 0.02);
-            const currentError = Math.abs(displaySP - displayActual);
-            if (responseTimeObj.isMeasuring) {
-                responseTimeObj.settledTime = mcuTime - responseTimeObj.startTime;
-                if (currentError <= tolerance) responseTimeObj.isMeasuring = false;
-            } else if (currentError > tolerance * 2) {
-                responseTimeObj.startTime = mcuTime;
-                responseTimeObj.isMeasuring = true;
-            }
+            let displayPredDepth = csvRow.y_pred * 1.1 + csvRow.tail_filt * 2.0; // Ước tính công thức cũ
+            
+            updateResponseTime(depthRt, csvRow.depth_target, csvRow.est_depth, mcuTime);
+            updateResponseTime(alphaRt, csvRow.sp_ref, csvRow.lift_filt, mcuTime);
 
-            // --- Cập nhật Thẻ thông số tóm tắt ---
-            document.getElementById('val-setpoint').innerText = displaySP.toFixed(1);
-            document.getElementById('val-current').innerText = displayActual.toFixed(1);
-            // Hiển thị sai số Actual - Setpoint
-            document.getElementById('val-error').innerText = (displayActual - displaySP).toFixed(2);
+            // --- Cập nhật Thẻ thông số Độ Sâu ---
+            document.getElementById('val-depth-setpoint').innerText = csvRow.depth_target.toFixed(1);
+            document.getElementById('val-depth-current').innerText = csvRow.est_depth.toFixed(1);
+            document.getElementById('val-depth-error').innerText = (csvRow.est_depth - csvRow.depth_target).toFixed(2);
+            updateTimeUI('val-depth-time', depthRt);
 
-            const valTimeEl = document.getElementById('val-time');
-            valTimeEl.innerText = responseTimeObj.settledTime.toFixed(2) + (responseTimeObj.isMeasuring ? ' s...' : ' s');
-            valTimeEl.className = responseTimeObj.isMeasuring ? "text-xl sm:text-2xl font-bold text-amber-500 font-mono truncate w-full text-center" : "text-xl sm:text-2xl font-bold text-green-500 font-mono truncate w-full text-center";
-
-            // --- Cập nhật thẻ Alpha (Chỉ dành cho Auto Mode) ---
+            // --- Cập nhật Thẻ thông số Alpha ---
             document.getElementById('val-alpha-setpoint').innerText = csvRow.sp_ref.toFixed(1);
             document.getElementById('val-alpha-current').innerText = csvRow.lift_filt.toFixed(1);
             document.getElementById('val-alpha-error').innerText = (csvRow.lift_filt - csvRow.sp_ref).toFixed(2);
             document.getElementById('val-alpha-pred').innerText = csvRow.y_pred.toFixed(1);
+            updateTimeUI('val-alpha-time', alphaRt);
 
             // --- Cập nhật Dữ liệu Biểu đồ (Chưa Render) ---
-            pushChartData(chartResponse, t_label, [displaySP, displayActual, displayPred]);
-            pushChartData(chartResponseAlpha, t_label, [csvRow.sp_ref, csvRow.lift_filt, csvRow.y_pred]);
+            pushChartData(chartDepth, t_label, [csvRow.depth_target, csvRow.est_depth, displayPredDepth]);
+            pushChartData(chartAlpha, t_label, [csvRow.sp_ref, csvRow.lift_filt, csvRow.y_pred]);
             pushChartData(chartControl, t_label, [csvRow.u]);
             pushChartData(chartUeq, t_label, [csvRow.u_eq]);
             pushChartData(chartUsw, t_label, [csvRow.u_sw]);
@@ -1429,8 +1383,8 @@
             // Chỉ render lại biểu đồ sau mỗi 10 gói tin để tránh lag trình duyệt
             updateCounter++;
             if (updateCounter >= 10) {
-                chartResponse.update('none');
-                chartResponseAlpha.update('none');
+                chartDepth.update('none');
+                chartAlpha.update('none');
                 chartControl.update('none');
                 chartUeq.update('none');
                 chartUsw.update('none');
@@ -1596,19 +1550,15 @@
             document.getElementById('lblDataCount').innerText = "0";
 
             // Xóa data trên chart
-            [chartResponse, chartResponseAlpha, chartControl, chartUeq, chartUsw, chartSliding, chartSComp, chartUeqComp, chartUswComp, chartLifting, chartTailboard].forEach(chart => {
+            [chartDepth, chartAlpha, chartControl, chartUeq, chartUsw, chartSliding, chartSComp, chartUeqComp, chartUswComp, chartLifting, chartTailboard].forEach(chart => {
                 chart.data.labels = [];
                 chart.data.datasets.forEach(ds => ds.data = []);
                 chart.update();
             });
 
             // Reset tính toán Response Time
-            responseTimeObj = {
-                lastSp: null,
-                startTime: 0,
-                settledTime: 0.00,
-                isMeasuring: false
-            };
+            depthRt = createResponseTimeTracker();
+            alphaRt = createResponseTimeTracker();
 
             // Reset lại bộ đếm Serial
             rxCount = 0;
@@ -1619,16 +1569,18 @@
             document.getElementById('lblFreq').innerText = "--";
 
             // Đặt lại các số trên Summary Cards
-            document.getElementById('val-setpoint').innerText = "0.0";
-            document.getElementById('val-current').innerText = "0.0";
-            document.getElementById('val-error').innerText = "0.00";
-            document.getElementById('val-time').innerText = "0.00 s";
-            document.getElementById('val-time').className = "text-xl sm:text-2xl font-bold text-green-500 font-mono truncate w-full text-center";
+            document.getElementById('val-depth-setpoint').innerText = "0.0";
+            document.getElementById('val-depth-current').innerText = "0.0";
+            document.getElementById('val-depth-error').innerText = "0.00";
+            document.getElementById('val-depth-time').innerText = "0.00 s";
+            document.getElementById('val-depth-time').className = "text-xl sm:text-2xl font-bold text-green-500 font-mono truncate w-full text-center";
 
             document.getElementById('val-alpha-setpoint').innerText = "0.0";
             document.getElementById('val-alpha-current').innerText = "0.0";
-            document.getElementById('val-alpha-error').innerText = "-0.0";
+            document.getElementById('val-alpha-error').innerText = "-0.00";
             document.getElementById('val-alpha-pred').innerText = "0.0";
+            document.getElementById('val-alpha-time').innerText = "0.00 s";
+            document.getElementById('val-alpha-time').className = "text-xl sm:text-2xl font-bold text-green-500 font-mono truncate w-full text-center";
 
             // Đặt lại các Component Cards & Max Stats
             maxStats = {

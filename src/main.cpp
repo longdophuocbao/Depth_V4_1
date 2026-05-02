@@ -29,17 +29,9 @@
  */
 
 #define DEBUG_SERIAL // tuning by serial
-// #define MONITOR_WIFI // monitor by wifi
+
 
 #include <Arduino.h>
-
-#ifdef MONITOR_WIFI
-#include <WiFi.h>
-#include <LittleFS.h>
-#include <AsyncTCP.h>
-#include <ESPAsyncWebServer.h>
-#include <DNSServer.h>
-#endif
 
 #include <math.h>
 
@@ -64,10 +56,7 @@ Adafruit_ADS1115 tailboardsensor;
 ESP32PWM pwmIN1;
 ESP32PWM pwmIN2;
 
-#ifdef MONITOR_WIFI
-static const char *AP_SSID = "TractorControl";
-static const char *AP_PASS = "12345678";
-#endif
+
 
 // ────────────────────────────────────────────────────────────────────
 //  CHU KỲ LẤY MẪU
@@ -77,9 +66,6 @@ static const TickType_t DT_TICKS = pdMS_TO_TICKS(2);
 
 static const TickType_t SENSOR_DT_TICKS = pdMS_TO_TICKS(2);
 
-#ifdef MONITOR_WIFI
-static const TickType_t WEB_DT_TICKS = pdMS_TO_TICKS(50);
-#endif
 
 #ifdef DEBUG_SERIAL
 static const TickType_t SERIALDEBUG_DT_TICKS = pdMS_TO_TICKS(20); // 20ms =50hz
@@ -307,7 +293,7 @@ volatile float g_L = 0.0331f;
 volatile float g_lift_offset = 266.6f;
 volatile float g_tail_offset = 126.43f;
 
-volatile float g_fc_lifting = 10.0f, g_fc_tailboard = 10.0f, g_omega_ref = 2.0f, g_fc_de = 20.0f;
+volatile float g_fc_lifting = 25.0f, g_fc_tailboard = 10.0f, g_omega_ref = 10.0f, g_fc_de = 5.0f;
 
 volatile bool g_model_dirty = true;
 
@@ -319,13 +305,6 @@ volatile float g_lifting_raw_val = 0, g_tail_raw_val = 0, g_sp_raw_val = 0;
 SemaphoreHandle_t g_mutex;
 SOIPDTModel g_model_nd;
 SOIPDTModel g_model_wd;
-
-#ifdef MONITOR_WIFI
-AsyncWebServer server(80);
-AsyncWebSocket ws("/ws");
-DNSServer dnsServer;
-#endif
-
 
 
 uint8_t calculateChecksum(uint8_t *data, size_t len)
@@ -691,138 +670,6 @@ void controlTask(void *param)
     }
 }
 
-#ifdef MONITOR_WIFI
-
-struct __attribute__((packed)) SettingsPayload
-{
-    float depth_target; // Độ sâu mục tiêu (mm)
-    float Kp;
-    float Ki;
-    float Kd;
-    float K1;
-    float K2;
-    float K;
-    float tau1;
-    float tau2;
-    float L;
-    float lift_offset;
-    float tail_offset;
-    float is_auto;      // 0=Manual, 1=Auto
-    float alpha_manual; // Alpha target thủ công
-};
-
-struct __attribute__((packed)) ControllerStatus
-{
-    float liftingangle;
-    float tailboardangle;
-    float setpoint;
-    float depth_target;
-    float e;
-    float de;
-    float s;
-    float u;
-    float estimate_depth;
-    float is_auto;
-};
-
-void broadcastData()
-{
-    if (ws.count() == 0)
-        return;
-
-    ControllerStatus status;
-    if (xSemaphoreTake(g_mutex, pdMS_TO_TICKS(5)) != pdTRUE)
-        return;
-    status.liftingangle = g_liftingangle;
-    status.tailboardangle = g_tailboardangle;
-    status.setpoint = g_setpoint;
-    status.depth_target = g_depth_target;
-    status.e = g_e;
-    status.de = g_de;
-    status.s = g_s;
-    status.u = g_u;
-    status.is_auto = (g_mode == 0) ? 1.0f : 0.0f;
-    xSemaphoreGive(g_mutex);
-
-    ws.binaryAll((uint8_t *)&status, sizeof(ControllerStatus));
-}
-
-void webBroadcastTask(void *param)
-{
-    TickType_t xLastWake = xTaskGetTickCount();
-    while (true)
-    {
-        broadcastData();
-        ws.cleanupClients();
-        vTaskDelayUntil(&xLastWake, WEB_DT_TICKS);
-    }
-}
-
-void onWsEvent(AsyncWebSocket *server, AsyncWebSocketClient *client, AwsEventType type, void *arg, uint8_t *data, size_t len)
-{
-    if (type == WS_EVT_DATA)
-    {
-        AwsFrameInfo *info = (AwsFrameInfo *)arg;
-        if (info->final && info->index == 0 && info->len == len && info->opcode == WS_BINARY)
-        {
-            if (len == sizeof(SettingsPayload))
-            {
-                SettingsPayload *p = (SettingsPayload *)data;
-                if (xSemaphoreTake(g_mutex, pdMS_TO_TICKS(10)) == pdTRUE)
-                {
-                    g_depth_target = constrain(p->depth_target, 40.0f, 150.0f);
-                    g_Kp = constrain(p->Kp, 0.01f, 200.0f);
-                    g_Ki = constrain(p->Ki, 0.0f, 100.0f);
-                    g_Kd = constrain(p->Kd, 0.001f, 100.0f);
-                    g_K1 = constrain(p->K1, 0.01f, 500.0f);
-                    g_K2 = constrain(p->K2, 0.01f, 500.0f);
-                    g_lift_offset = constrain(p->lift_offset, 0.0f, 345.0f);
-                    g_tail_offset = constrain(p->tail_offset, 0.0f, 250.f);
-                    g_mode = (p->is_auto > 0.5f) ? 0 : 1;
-                    g_alpha_manual = constrain(p->alpha_manual, 0.0f, 40.0f);
-
-                    if (p->K != g_K || p->tau1 != g_tau1 || p->L != g_L)
-                    {
-                        g_K = constrain(p->K, 0.01f, 100.0f);
-                        g_tau1 = constrain(p->tau1, 0.01f, 100.0f);
-                        g_L = constrain(p->L, 0.0f, 10.0f);
-                        g_model_dirty = true;
-                    }
-                    xSemaphoreGive(g_mutex);
-                    Serial.println("[WS] Binary Settings Updated");
-                }
-            }
-        }
-        else if (info->opcode == WS_TEXT)
-        {
-            // Vẫn giữ lại xử lý text JSON nếu cần test thủ công
-        }
-    }
-}
-
-void setupRoutes()
-{
-    ws.onEvent(onWsEvent);
-    server.addHandler(&ws);
-
-    // Captive Portal: Điều hướng các yêu cầu phổ biến của Android/iOS
-    server.on("/generate_204", HTTP_GET, [](AsyncWebServerRequest *request)
-              { request->redirect("/"); }); // Android
-    server.on("/fwlink", HTTP_GET, [](AsyncWebServerRequest *request)
-              { request->redirect("/"); }); // Windows
-
-    server.on("/", HTTP_GET, [](AsyncWebServerRequest *req)
-              {
-        AsyncWebServerResponse *response = req->beginResponse(LittleFS, "/index.html", "text/html");
-        req->send(response); });
-
-    server.onNotFound([](AsyncWebServerRequest *req)
-                      {
-        // Nếu yêu cầu không khớp với bất kỳ route nào, điều hướng về trang chủ (cần thiết cho Captive Portal)
-        req->redirect("/"); });
-}
-#endif
-
 // ────────────────────────────────────────────────────────────────────
 //  SERIAL TELEMETRY & TUNING
 // ────────────────────────────────────────────────────────────────────
@@ -945,6 +792,63 @@ void serialTuningTask(void *param)
             else
                 Serial.read();
         }
+
+        // SỬA Ở ĐÂY: Gửi data sang ESP32 thứ hai qua Serial2
+        Serial2.write((uint8_t *)&msg, sizeof(msg));
+
+        // SỬA Ở ĐÂY: Lắng nghe lệnh điều khiển từ ESP32 thứ hai qua Serial2
+        if (Serial2.available() >= sizeof(SerialCommand))
+        {
+            uint8_t buf[sizeof(SerialCommand)];
+            if (Serial2.peek() == 0xAA)
+            {
+                Serial2.readBytes(buf, sizeof(SerialCommand));
+                SerialCommand *cmd = (SerialCommand *)buf;
+                if (cmd->head1 == 0xAA && cmd->head2 == 0x55 && calculateChecksum((uint8_t *)&cmd->values, sizeof(cmd->values)) == cmd->checksum)
+                {
+                    if (xSemaphoreTake(g_mutex, pdMS_TO_TICKS(10)) == pdTRUE)
+                    {
+                        float *cv = cmd->values;
+                        g_run_state = (cv[0] > 0.5f);
+                        g_mode = (int)cv[1];
+                        g_depth_target = cv[2];
+                        g_alpha_manual = cv[3];
+                        g_sp_amp = cv[4];
+                        g_sp_freq = cv[5];
+
+                        g_Kp = cv[6];
+                        g_Ki = cv[7];
+                        g_Kd = cv[8];
+                        g_K1 = cv[9];
+                        g_K2 = cv[10];
+                        
+                        g_K = cv[11];
+                        g_tau1 = cv[12];
+                        g_L = cv[13] / 1000.0f; // HTML sends L in ms
+                        
+                        if (g_fc_lifting != cv[14] || g_fc_tailboard != cv[15] || g_fc_de != cv[16] || g_omega_ref != cv[17])
+                        {
+                            g_fc_lifting = cv[14];
+                            g_fc_tailboard = cv[15];
+                            g_fc_de = cv[16];
+                            g_omega_ref = cv[17];
+                            
+                            filterLifting.init(g_fc_lifting, 500.0f);
+                            filterTailboard.init(g_fc_tailboard, 500.0f);
+                            filterAlpha_actual_dot.init(g_fc_de, 500.0f);
+                            refFilter.init(g_omega_ref, 1.0f);
+                        }
+                        
+                        g_model_dirty = true;
+                        xSemaphoreGive(g_mutex);
+                    }
+                }
+            }
+            else
+            {
+                Serial2.read(); // Xóa byte rác
+            }
+        }
         vTaskDelayUntil(&xLastWake, SERIALDEBUG_DT_TICKS);
     }
 }
@@ -955,6 +859,8 @@ void setup()
     setCpuFrequencyMhz(240);
     delay(500);
     Serial.begin(250000);
+    delay(500);
+    Serial2.begin(250000, SERIAL_8N1, 16, 17);
     delay(500);
     Serial.println("\n=== Tractor SOIPDT + Super-Twisting SMC ===");
     Wire.begin(PIN_SDA, PIN_SCL);
@@ -979,14 +885,15 @@ void setup()
     pwmIN1.attachPin(PIN_MOTOR_IN1, PWM_FREQ_HZ, PWM_BITS);
     pwmIN2.attachPin(PIN_MOTOR_IN2, PWM_FREQ_HZ, PWM_BITS);
     g_mutex = xSemaphoreCreateMutex();
-    filterLifting.init(10.0f, 500.0f);
-    filterTailboard.init(25.0f, 500.0f);
+    filterLifting.init(g_fc_lifting, 500.0f);
+    filterTailboard.init(g_fc_tailboard, 500.0f);
 
     medianLifting.init(11.0f);
     medianTailboard.init(11.0f);
-    filterAlpha_actual_dot.init(10.0f, 500.0f);
 
-    refFilter.init(2.0f, 1.0f);
+    filterAlpha_actual_dot.init( g_fc_de, 500.0f);
+
+    refFilter.init(g_omega_ref, 1.0f);
     // Lưu ý: x1/x2 của refFilter sẽ được set về liftingangle thực
     // ngay lần đầu runController() chạy (first_run logic), nên không cần set ở đây.
     g_model_wd.K = g_K;
@@ -999,31 +906,6 @@ void setup()
     g_model_nd.init(DT);
     g_model_dirty = false;
 
-#ifdef MONITOR_WIFI
-
-    if (LittleFS.begin(true))
-    {
-        Serial.println("[FS] LittleFS mounted successfully");
-    }
-    else
-    {
-        Serial.println("[FS] LittleFS mount failed");
-    }
-
-    // WiFi AP
-    WiFi.mode(WIFI_AP);
-    WiFi.softAP(AP_SSID, AP_PASS);
-    dnsServer.start(53, "*", WiFi.softAPIP());
-    Serial.printf("[WiFi]  SSID: %-20s  IP: %s\n",
-                  AP_SSID, WiFi.softAPIP().toString().c_str());
-
-    // Web server
-    setupRoutes();
-    server.begin();
-    Serial.println("[HTTP]  Server OK – port 80");
-    // xTaskCreatePinnedToCore(wsStatusTask, "WSStatus", 4096, nullptr, 1, nullptr, 0);
-    xTaskCreatePinnedToCore(webBroadcastTask, "Web_WS", 4096, nullptr, 1, nullptr, 0);
-#endif
 
     xTaskCreatePinnedToCore(sensorReadTask, "SensRead", 4096, nullptr, 3, nullptr, 1);
     xTaskCreatePinnedToCore(controlTask, "SMC_Ctrl", 8192, nullptr, 2, nullptr, 1);
