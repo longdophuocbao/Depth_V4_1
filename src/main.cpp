@@ -30,7 +30,6 @@
 
 #define DEBUG_SERIAL // tuning by serial
 
-
 #include <Arduino.h>
 
 #include <math.h>
@@ -56,8 +55,6 @@ Adafruit_ADS1115 tailboardsensor;
 ESP32PWM pwmIN1;
 ESP32PWM pwmIN2;
 
-
-
 // ────────────────────────────────────────────────────────────────────
 //  CHU KỲ LẤY MẪU
 // ────────────────────────────────────────────────────────────────────
@@ -65,7 +62,6 @@ static const float DT = 0.002f; // 2 ms = 500 Hz
 static const TickType_t DT_TICKS = pdMS_TO_TICKS(2);
 
 static const TickType_t SENSOR_DT_TICKS = pdMS_TO_TICKS(2);
-
 
 #ifdef DEBUG_SERIAL
 static const TickType_t SERIALDEBUG_DT_TICKS = pdMS_TO_TICKS(20); // 20ms =50hz
@@ -141,6 +137,13 @@ struct ReferenceFilter
         omega = _omega;
         zeta = _zeta;
         x1 = x2 = 0.0f;
+    }
+
+    void reinit(float _omega, float _zeta)
+    {
+        omega = _omega;
+        zeta = _zeta;
+        // Giữ nguyên x1, x2 để không bị giật khi tuning
     }
 
     struct FilterOutput
@@ -219,6 +222,18 @@ struct LPF2ndOrder
 
     void init(float fc, float fs)
     {
+        computeCoeffs(fc, fs);
+        x1 = x2 = y1 = y2 = 0.0f;
+    }
+
+    void reinit(float fc, float fs)
+    {
+        computeCoeffs(fc, fs);
+        // Không reset x1, x2, y1, y2
+    }
+
+    void computeCoeffs(float fc, float fs)
+    {
         float w0 = 2.0f * M_PI * fc / fs;
         float cosw0 = cosf(w0);
         float alpha = sinf(w0) / 1.4142f;
@@ -228,7 +243,6 @@ struct LPF2ndOrder
         b2 = ((1.0f - cosw0) / 2.0f) / a0;
         a1 = (-2.0f * cosw0) / a0;
         a2 = (1.0f - alpha) / a0;
-        x1 = x2 = y1 = y2 = 0.0f;
     }
 
     float update(float x)
@@ -251,14 +265,14 @@ LPF2ndOrder filterAlpha_actual_dot;
 // ────────────────────────────────────────────────────────────────────
 //  BIẾN TOÀN CỤC – TRẠNG THÁI HỆ THỐNG
 // ────────────────────────────────────────────────────────────────────
-volatile float g_liftingangle = 40.0f; 
+volatile float g_liftingangle = 40.0f;
 volatile float g_tailboardangle = 0.0f;
 volatile float g_lifting_filtered = 40.0f;
 volatile float g_tail_filtered = 0.0f;
 volatile float g_depth_target = 100.0f;
 volatile float g_setpoint = 20.0f;
-volatile int   g_mode = 1; // 0: Auto, 1: Manual, 2: Step, 3: Oscillation
-volatile bool  g_run_state = false;
+volatile int g_mode = 1; // 0: Auto, 1: Manual, 2: Step, 3: Oscillation
+volatile bool g_run_state = false;
 volatile float g_alpha_manual = 20.0f;
 volatile float g_sp_amp = 10.0f;
 volatile float g_sp_freq = 0.1f;
@@ -293,7 +307,7 @@ volatile float g_L = 0.0331f;
 volatile float g_lift_offset = 266.6f;
 volatile float g_tail_offset = 126.43f;
 
-volatile float g_fc_lifting = 25.0f, g_fc_tailboard = 10.0f, g_omega_ref = 10.0f, g_fc_de = 5.0f;
+volatile float g_fc_lifting = 10.0f, g_fc_tailboard = 10.0f, g_omega_ref = 8.0f, g_fc_de = 10.0f;
 
 volatile bool g_model_dirty = true;
 
@@ -305,7 +319,6 @@ volatile float g_lifting_raw_val = 0, g_tail_raw_val = 0, g_sp_raw_val = 0;
 SemaphoreHandle_t g_mutex;
 SOIPDTModel g_model_nd;
 SOIPDTModel g_model_wd;
-
 
 uint8_t calculateChecksum(uint8_t *data, size_t len)
 {
@@ -346,7 +359,7 @@ float get_alpha_ref(float alpha, float beta_actual, float depth_target)
     float depth_est = depth_nom + GAIN_DD_DB * delta_beta; // compensated depth
     float depth_err = depth_target - depth_est;
     float alpha_ref = alpha + GAIN_DA_DD * depth_err; // incremental correction
-    return fmaxf(11.0f, fminf(27.0f, alpha_ref));
+    return fmaxf(11.0f, fminf(30.0f, alpha_ref));
 }
 
 double calculate_alpha(double depthtarget, double tailboardangle)
@@ -441,15 +454,22 @@ void runController()
 
     // --- MODE HANDLING ---
     float sp_raw = 20.0f;
-    if (mode == 0) { // Auto
+    if (mode == 0)
+    { // Auto
         sp_raw = (float)get_alpha_ref(liftingangle, tailangle, depth_target);
-    } else if (mode == 1) { // Manual
+    }
+    else if (mode == 1)
+    { // Manual
         sp_raw = alpha_manual;
-    } else if (mode == 2) { // Step Wave
+    }
+    else if (mode == 2)
+    { // Step Wave
         float period = 1.0f / (sp_freq > 0.001f ? sp_freq : 0.001f);
         float time_in_period = fmodf(millis() / 1000.0f, period);
         sp_raw = alpha_manual + (time_in_period < period / 2.0f ? sp_amp : -sp_amp);
-    } else if (mode == 3) { // Oscillation
+    }
+    else if (mode == 3)
+    { // Oscillation
         sp_raw = alpha_manual + sp_amp * sinf(2.0f * M_PI * sp_freq * (millis() / 1000.0f));
     }
     sp_raw = constrain(sp_raw, 0.0f, 40.0f);
@@ -457,20 +477,20 @@ void runController()
 
     // ── STATICS – khai báo tập trung để dễ quản lý ──────────────────
     static float u_sw_int = 0.0f;
-    static float u_prev   = 0.0f;
+    static float u_prev = 0.0f;
     static float y_pred_prev = 0.0f;
-    static int   prev_mode   = -1;
-    static bool  first_run    = true;
+    static int prev_mode = -1;
+    static bool first_run = true;
 
     // ── KHỞI TẠO / ĐỔI CHẾ ĐỘ ─────────────────────────────────────
     if (first_run || mode != prev_mode)
     {
-        refFilter.x1      = liftingangle;
-        refFilter.x2      = 0.0f;
-        g_e_int           = 0.0f;
-        u_sw_int          = 0.0f;
-        y_pred_prev       = liftingangle;
-        first_run         = false;
+        refFilter.x1 = liftingangle;
+        refFilter.x2 = 0.0f;
+        g_e_int = 0.0f;
+        u_sw_int = 0.0f;
+        y_pred_prev = liftingangle;
+        first_run = false;
     }
     prev_mode = mode;
 
@@ -484,8 +504,8 @@ void runController()
 
     if (xSemaphoreTake(g_mutex, pdMS_TO_TICKS(5)) == pdTRUE)
     {
-        g_setpoint      = alpha_ref;
-        g_dot_alpha_ref  = dot_alpha_ref;
+        g_setpoint = alpha_ref;
+        g_dot_alpha_ref = dot_alpha_ref;
         g_ddot_alpha_ref = ddot_alpha_ref;
         g_tailboardangle = tailangle;
         xSemaphoreGive(g_mutex);
@@ -503,7 +523,7 @@ void runController()
         g_model_nd.init(DT);
     }
 
-    float y_m   = g_model_nd.step(u_prev, DT);
+    float y_m = g_model_nd.step(u_prev, DT);
     float y_m_d = g_model_wd.step(u_prev, DT);
     float y_pred = liftingangle + (y_m - y_m_d);
 
@@ -569,7 +589,6 @@ void runController()
     }
     u_eq = constrain(u_eq, -PWM_MAX_ABS, PWM_MAX_ABS);
 
-    
     float sign_s = (s > 0.0f) ? 1.0f : ((s < 0.0f) ? -1.0f : 0.0f);
 
     // Super-Twisting Algorithm cho hệ gain âm (b < 0):
@@ -586,14 +605,43 @@ void runController()
     }
     u_sw = constrain(u_sw, -PWM_MAX_ABS, PWM_MAX_ABS);
 
+    // float u_out = constrain(u_eq + u_sw, -PWM_MAX_ABS, PWM_MAX_ABS);
+    // if (run_state)
+    // {
+    //     driveActuator(u_out);
+    //     u_prev = u_out;
+    // }
+    // else
+    // {
+    //     driveActuator(0.0f);
+    //     u_prev = 0.0f;
+    // }
+
+    /***********************************************************************************/
+    const float PWM_DEADBAND = 0.25f; // Bù thêm 5% để chắc chắn vượt qua vùng chết cơ học
     float u_out = constrain(u_eq + u_sw, -PWM_MAX_ABS, PWM_MAX_ABS);
+    float u_out_hardware = 0.0f;
+    // 2. Bù vùng chết để xuất ra phần cứng
+    if (fabsf(u_out) > 0.05f) // Bỏ qua nhiễu siêu nhỏ
+    {
+        if (u_out > 0.0f)
+            u_out_hardware = u_out + PWM_DEADBAND;
+        else
+            u_out_hardware = u_out - PWM_DEADBAND;
+    }
+    
+    u_out_hardware = constrain(u_out_hardware, -PWM_MAX_ABS, PWM_MAX_ABS);
+    // 3. Xuất phần cứng và cập nhật mô hình
     if (run_state) {
-        driveActuator(u_out);
-        u_prev = u_out;
+        driveActuator(u_out_hardware);
+        u_prev = u_out; // <-- Mô hình chỉ nhận tín hiệu lý thuyết!
     } else {
         driveActuator(0.0f);
         u_prev = 0.0f;
     }
+    /*********************************************************/
+
+
     float estimatedepth = (float)calculate_estimate_depth(liftingangle, tailangle);
     if (xSemaphoreTake(g_mutex, pdMS_TO_TICKS(5)) == pdTRUE)
     {
@@ -677,7 +725,7 @@ struct __attribute__((packed)) SerialTelemetry
 {
     uint8_t head1 = 0xAA;
     uint8_t head2 = 0x55;
-    float values[38]; 
+    float values[38];
     uint8_t checksum;
 };
 
@@ -685,7 +733,7 @@ struct __attribute__((packed)) SerialCommand
 {
     uint8_t head1;
     uint8_t head2;
-    float values[18]; 
+    float values[18];
     uint8_t checksum;
 };
 
@@ -766,24 +814,24 @@ void serialTuningTask(void *param)
                         g_Kd = cv[8];
                         g_K1 = cv[9];
                         g_K2 = cv[10];
-                        
+
                         g_K = cv[11];
                         g_tau1 = cv[12];
                         g_L = cv[13] / 1000.0f; // HTML sends L in ms
-                        
+
                         if (g_fc_lifting != cv[14] || g_fc_tailboard != cv[15] || g_fc_de != cv[16] || g_omega_ref != cv[17])
                         {
                             g_fc_lifting = cv[14];
                             g_fc_tailboard = cv[15];
                             g_fc_de = cv[16];
                             g_omega_ref = cv[17];
-                            
-                            filterLifting.init(g_fc_lifting, 500.0f);
-                            filterTailboard.init(g_fc_tailboard, 500.0f);
-                            filterAlpha_actual_dot.init(g_fc_de, 500.0f);
-                            refFilter.init(g_omega_ref, 1.0f);
+
+                            filterLifting.reinit(g_fc_lifting, 500.0f);
+                            filterTailboard.reinit(g_fc_tailboard, 500.0f);
+                            filterAlpha_actual_dot.reinit(g_fc_de, 500.0f);
+                            refFilter.reinit(g_omega_ref, 1.0f);
                         }
-                        
+
                         g_model_dirty = true;
                         xSemaphoreGive(g_mutex);
                     }
@@ -821,24 +869,39 @@ void serialTuningTask(void *param)
                         g_Kd = cv[8];
                         g_K1 = cv[9];
                         g_K2 = cv[10];
-                        
+
                         g_K = cv[11];
                         g_tau1 = cv[12];
                         g_L = cv[13] / 1000.0f; // HTML sends L in ms
-                        
+
+                        g_Kp = 1.9f;
+                        g_Ki = 1.5f;
+                        g_Kd = 1.33f;
+                        g_K1 = 3.7f;
+                        g_K2 = 0.5f;
+
+                        g_K = 35;
+                        g_tau1 = 1.224;
+                        g_L = 33.0f / 1000.0f; // HTML sends L in ms
+
                         if (g_fc_lifting != cv[14] || g_fc_tailboard != cv[15] || g_fc_de != cv[16] || g_omega_ref != cv[17])
                         {
                             g_fc_lifting = cv[14];
                             g_fc_tailboard = cv[15];
                             g_fc_de = cv[16];
                             g_omega_ref = cv[17];
-                            
-                            filterLifting.init(g_fc_lifting, 500.0f);
-                            filterTailboard.init(g_fc_tailboard, 500.0f);
-                            filterAlpha_actual_dot.init(g_fc_de, 500.0f);
-                            refFilter.init(g_omega_ref, 1.0f);
+
+                            g_fc_lifting = 10.0f;
+                            g_fc_tailboard =  10.0f;
+                            g_fc_de = 5.0f;
+                            g_omega_ref = 10.0f;
+
+                            filterLifting.reinit(g_fc_lifting, 500.0f);
+                            filterTailboard.reinit(g_fc_tailboard, 500.0f);
+                            filterAlpha_actual_dot.reinit(g_fc_de, 500.0f);
+                            refFilter.reinit(g_omega_ref, 1.0f);
                         }
-                        
+
                         g_model_dirty = true;
                         xSemaphoreGive(g_mutex);
                     }
@@ -891,7 +954,7 @@ void setup()
     medianLifting.init(11.0f);
     medianTailboard.init(11.0f);
 
-    filterAlpha_actual_dot.init( g_fc_de, 500.0f);
+    filterAlpha_actual_dot.init(g_fc_de, 500.0f);
 
     refFilter.init(g_omega_ref, 1.0f);
     // Lưu ý: x1/x2 của refFilter sẽ được set về liftingangle thực
@@ -905,7 +968,6 @@ void setup()
     g_model_nd.L = 0.0f;
     g_model_nd.init(DT);
     g_model_dirty = false;
-
 
     xTaskCreatePinnedToCore(sensorReadTask, "SensRead", 4096, nullptr, 3, nullptr, 1);
     xTaskCreatePinnedToCore(controlTask, "SMC_Ctrl", 8192, nullptr, 2, nullptr, 1);
